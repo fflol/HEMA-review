@@ -1,0 +1,24 @@
+{
+    "name": "191214-review-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "json-server": "json-server --watch db.json --port 4000 --delay 200",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "Kay Lee",
+    "license": "MIT",
+    "dependencies": {
+        "next": "^9.1.5",
+        "react": "^16.12.0",
+        "react-dom": "^16.12.0"
+    },
+    "devDependencies": {
+        "json-server": "^0.15.1"
+    }
+}
