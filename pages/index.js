@@ -12,17 +12,17 @@ import * as helpers from "../tools/helpers";
 
 //
 // component
-const Index = ({ data }) => {
-    const featured = helpers.findFeatured(data.products);
-    const recentReviewed = helpers.findRecentReviewed(
-        data.products,
-        data.reviews
-    );
+const Index = ({ products, reviews }) => {
+    console.log("products: ", products);
+    const featured = helpers.findFeatured(products);
+    const recentReviewed = helpers.findRecentReviewed(products, reviews);
+    // console.log(recentReviewed);
+
     return (
         <>
             <Header />
             <h1>HEMA Gear Reviews</h1>
-            <Search data={data} />
+            <Search products={products} />
             <Featured featured={featured} />
             <Recent recentReviewed={recentReviewed} />
             <Footer />
@@ -35,11 +35,14 @@ Index.getInitialProps = async () => {
     const db = await fetch("http://localhost:4000/db")
         .then(res => res.json())
         .catch(err => console.log(err));
-    return { data: db.db };
+    return {
+        products: db.products,
+        reviews: db.reviews
+    };
 };
 
 Index.propTypes = {
-    data: PropTypes.object.isRequired
+    // db: PropTypes.object.isRequired
 };
 
 export default Index;

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 
 import * as helpers from "../../tools/helpers";
 
-const Search = ({ data }) => {
+const Search = ({ products }) => {
     const [input, setInput] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     useEffect(() => {
         input === ""
             ? setSearchResult([])
-            : setSearchResult(helpers.search(data.products, input));
+            : setSearchResult(helpers.search(products, input));
     }, [input]);
     const handleChange = e => {
         setInput(e.target.value);
@@ -28,7 +29,10 @@ const Search = ({ data }) => {
             <ul>
                 {searchResult.map(prod => (
                     <li key={prod.id}>
-                        <h4>{prod.name}</h4>
+                        {/* <h4>{prod.name}</h4> */}
+                        <Link href="/prod/[id]" as={`/prod/${prod.id}`}>
+                            <a>{prod.name}</a>
+                        </Link>
                     </li>
                 ))}
             </ul>
