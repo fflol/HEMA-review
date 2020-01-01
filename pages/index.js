@@ -13,14 +13,14 @@ import * as helpers from "../tools/helpers";
 //
 // component
 const Index = ({ products, reviews }) => {
-    console.log("products: ", products);
+    // console.log("products: ", products);
     const featured = helpers.findFeatured(products);
     const recentReviewed = helpers.findRecentReviewed(products, reviews);
     // console.log(recentReviewed);
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <h1>HEMA Gear Reviews</h1>
             <Search products={products} />
             <Featured featured={featured} />
@@ -32,7 +32,7 @@ const Index = ({ products, reviews }) => {
 
 //
 Index.getInitialProps = async () => {
-    const db = await fetch("http://localhost:4000/db")
+    const db = await fetch(`${process.env.DEV_URL}/db`)
         .then(res => res.json())
         .catch(err => console.log(err));
     return {

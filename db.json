@@ -117,100 +117,44 @@
       "text": "good gloves! yes good ones."
     },
     {
-      "id": "GOMphSVaDV",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576821657396,
-      "starsReview": "1",
-      "text": "bad test"
-    },
-    {
-      "id": "jNaYom1Q29",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576821953793,
-      "starsReview": "1",
-      "text": "test test"
-    },
-    {
-      "id": "elIbjVdu5_",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576821971235,
-      "starsReview": "1",
-      "text": "test test"
-    },
-    {
-      "id": "lhrenEjfwY",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822009984,
-      "starsReview": "1",
-      "text": "test test"
-    },
-    {
-      "id": "d664OlY3R8",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822090521,
-      "starsReview": "1",
-      "text": "asdfasdfsdf"
-    },
-    {
-      "id": "lWVRJ8BoNK",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822133521,
-      "starsReview": "1",
-      "text": "test tesasdfasdf"
-    },
-    {
-      "id": "QuVTi0plP_",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822451476,
-      "starsReview": "1",
-      "text": "asdfasdfdfd"
-    },
-    {
-      "id": "3NHuinwYVU",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822738788,
-      "starsReview": "2",
-      "text": "asdfe"
-    },
-    {
-      "id": "nDLwgyftXm",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576822961162,
-      "starsReview": "3",
-      "text": "adfsdf"
-    },
-    {
-      "id": "ehcR2_wUkv",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576823226302,
-      "starsReview": "1",
-      "text": "test asdfasd fsdf"
-    },
-    {
-      "id": "G5KlrnpHY-",
-      "userID": "testID",
-      "productID": "a274u",
-      "timeReviewed": 1576823644948,
-      "starsReview": "1",
-      "text": "steasdfadfadf"
-    },
-    {
       "id": "cXwuuXjQUS",
       "userID": "testID",
       "productID": "ob9db",
       "timeReviewed": 1577355570672,
       "starsReview": "1",
       "text": "terrible jacket"
+    },
+    {
+      "id": "6nM5sEvpKd",
+      "userID": "testID",
+      "productID": "dxk3s",
+      "timeReviewed": 1577416573097,
+      "starsReview": "",
+      "text": "test this jacket"
+    },
+    {
+      "id": "5N5XI0ENoQ",
+      "userID": "testID",
+      "productID": "p6ck4",
+      "timeReviewed": 1577741065792,
+      "starsReview": "4",
+      "text": "jacket test w/ controlled radio input\n"
+    },
+    {
+      "id": "AF1vtVLvqQ",
+      "userID": "testID",
+      "productID": "a274u",
+      "timeReviewed": 1577748710254,
+      "starsReview": "5",
+      "text": "aaddeeddff"
+    },
+    {
+      "id": "5CQB-Ssh6d",
+      "userID": "testID",
+      "productID": "p6ck4",
+      "timeReviewed": 1577850223379,
+      "starsReview": "4",
+      "text": "no"
     }
   ],
   "users": [

@@ -1,3 +1,31 @@
+import fetch from "isomorphic-unfetch";
+
+//
+//CRUD
+export const postReview = async newReview =>
+    await fetch(`${process.env.DEV_URL}/reviews`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newReview)
+    }).then(handleResponse);
+
+export const deleteReview = async reviewID =>
+    await fetch(`${process.env.DEV_URL}/reviews/${reviewID}`, {
+        method: "DELETE"
+    }).then(handleResponse);
+
+export const putReview = async (reviewID, updatedReview) =>
+    await fetch(`${process.env.DEV_URL}/reviews/${reviewID}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedReview)
+    }).then(handleResponse);
+
+// misc
 export const handleResponse = async response => {
     if (response.ok) return response.json();
     if (response.status === 400) {

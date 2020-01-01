@@ -10,10 +10,10 @@ export const findRecentReviewed = (products, reviews) => {
     if (products.length < 1) return;
     return (
         reviews
-            // sort the reviews by time reviwed (timestamp)
+            // sort the reviews by time reviwed descending (timestamp)
             .sort((a, b) => {
-                if (a.timeReviewed > b.timeReviewed) return 1;
-                if (a.timeReviewed < b.timeReviewed) return -1;
+                if (a.timeReviewed < b.timeReviewed) return 1;
+                if (a.timeReviewed > b.timeReviewed) return -1;
                 return 0;
             })
             // remove duplicates
@@ -31,6 +31,16 @@ export const findRecentReviewed = (products, reviews) => {
     );
     // .filter(el => el);
 };
+
+// find reviews for a particular product
+export const findReviewsForThisProd = (reviewsTotal, productID) =>
+    reviewsTotal
+        .filter(review => review.productID === productID)
+        .sort((a, b) => {
+            if (a.timeReviewed < b.timeReviewed) return 1;
+            if (a.timeReviewed > b.timeReviewed) return -1;
+            return 0;
+        });
 
 // search func
 export const search = (products, input) => {

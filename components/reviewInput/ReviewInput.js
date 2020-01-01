@@ -1,69 +1,96 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import PropTypes from "prop-types";
-import fetch from "isomorphic-unfetch";
 import nanoid from "nanoid";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import * as apiUtils from "../../tools/apiUtils";
+import * as actionCreators from "../../tools/actionCreators";
+import * as reducers from "../../tools/reducer";
 
 //
 // component
-const ReviewInput = ({ productID, updateReviews }) => {
-    const [input, setInput] = useState("");
-    const handleInput = e => setInput(e.target.value);
-    const handleSubmit = async e => {
-        e.preventDefault();
-        // console.log(e.target.rating.value);
-        // console.log(e.target.review.value);
+const ReviewInput = ({ productID, reviewsDispatch }) => {
+    const [textInput, setTextInput] = useState("");
+    const [stars, setStars] = useState(null);
+
+    const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
+
+    // CRUD
+    const create = async () => {
         const newReview = {
             id: nanoid(10),
             userID: "testID",
             productID: productID,
             timeReviewed: Date.now(),
-            starsReview: e.target.rating.value,
-            text: input
+            starsReview: stars,
+            text: textInput
         };
-        await fetch("http://localhost:4000/reviews", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newReview)
-        })
-            .then(apiUtils.handleResponse)
+        actionCreators.beginApiCall(apiDispatch);
+        await apiUtils
+            .postReview(newReview)
+            .catch(apiUtils.handleError)
             .then(() => {
-                updateReviews(newReview);
+                actionCreators.createReviewSuccess(apiDispatch);
+                actionCreators.createReviewSuccess(reviewsDispatch, newReview);
                 toast.success("review post succeed");
-                setInput("");
+                setTextInput("");
+                setStars("");
             })
-            .catch(apiUtils.handleError);
+            .catch(err => {
+                actionCreators.apiCallError(apiDispatch);
+                throw err;
+            });
+    };
+
+    // handlers
+    const handleTextInput = e => setTextInput(e.target.value);
+    const handleStarsChange = e => setStars(e.target.value);
+    const handleSubmit = async e => {
+        e.preventDefault();
+        await create();
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <label>rating: </label>
-            <input type="radio" name="rating" value="1" />
-            <input type="radio" name="rating" value="2" />
-            <input type="radio" name="rating" value="3" />
-            <input type="radio" name="rating" value="4" />
-            <input type="radio" name="rating" value="5" />
+            <input
+                type="radio"
+                value="1"
+                checked={stars === "1"}
+                onChange={handleStarsChange}
+            />
+            <input
+                type="radio"
+                value="2"
+                checked={stars === "2"}
+                onChange={handleStarsChange}
+            />
+            <input
+                type="radio"
+                value="3"
+                checked={stars === "3"}
+                onChange={handleStarsChange}
+            />
+            <input
+                type="radio"
+                value="4"
+                checked={stars === "4"}
+                onChange={handleStarsChange}
+            />
+            <input
+                type="radio"
+                value="5"
+                checked={stars === "5"}
+                onChange={handleStarsChange}
+            />
+
             <br />
             <label>review: </label>
-            <textarea value={input} name="review" onChange={handleInput} />
+            <textarea value={textInput} onChange={handleTextInput} />
             <br />
-            <button>submit</button>
-            <ToastContainer
-                position="top-right"
-                autoClose={1000}
-                hideProgressBar
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnVisibilityChange
-                draggable
-                pauseOnHover
-            />
+            <button disabled={apiStatus ? true : false}>
+                {apiStatus ? "submiting..." : "submit"}
+            </button>
         </form>
     );
 };

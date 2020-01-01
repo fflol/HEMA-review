@@ -1,10 +1,16 @@
 import React from "react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 
-const Header = props => {
+const Header = () => {
     return (
         <header>
-            <button>log in</button>
+            <nav>
+                <Link href="/">
+                    <a>Home</a>
+                </Link>
+                <button>log in</button>
+            </nav>
         </header>
     );
 };

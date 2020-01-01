@@ -55,4 +55,6 @@ sketch
 
 .next
 
+.env
+
 # End of https://www.gitignore.io/api/git,react,firebase,visualstudiocode
