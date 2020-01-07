@@ -1,54 +1,45 @@
 import React, { useState, useReducer } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import * as fb from "firebase/app";
 
-import * as apiUtils from "../../tools/apiUtils";
+import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
 import * as reducers from "../../tools/reducer";
+import { firebase } from "../../firebase/firebaseConfig";
 
 //
 // component
-const ReviewSingle = ({ review, usersTotal, reviewsDispatch }) => {
+const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [textInput, setTextInput] = useState("");
-    const [starsInput, setStarsInput] = useState(null);
+    const [textInput, setTextInput] = useState(review.text);
+    const [ratingInput, setRatingInput] = useState("" + review.rating);
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
     // vars
-    const user = usersTotal.find(user => user.id === review.userID).name;
-    const stars = review.starsReview;
+    const user = review.user;
+    const rating = review.rating;
 
     // CRUD
-    const del = async () => {
-        actionCreators.beginApiCall(apiDispatch);
-        await apiUtils
-            .deleteReview(review.id)
-            .catch(apiUtils.handleError)
-            .then(() => {
-                actionCreators.deleteReviewSuccess(apiDispatch);
-                actionCreators.deleteReviewSuccess(reviewsDispatch, review.id);
-                toast.success("review delete succeed");
-            })
-            .catch(err => {
-                actionCreators.apiCallError(apiDispatch);
-                throw err;
-            });
-    };
-
     const update = async () => {
-        actionCreators.beginApiCall(apiDispatch);
+        const userRef = firebase
+            .firestore()
+            .collection("users")
+            .doc("9QpN0ED5sJp8VZdsKRdk");
+        const time = fb.firestore.Timestamp.now();
+
         const updatedReview = {
             id: review.id,
-            userID: review.userID,
-            productID: review.productID,
-            timeReviewed: Date.now(),
-            starsReview: starsInput,
+            user: userRef,
+            timeReviewed: time,
+            rating: parseInt(ratingInput),
             text: textInput
         };
+
+        actionCreators.beginApiCall(apiDispatch);
         await apiUtils
-            .putReview(review.id, updatedReview)
-            .catch(apiUtils.handleError)
+            .setReview(productID, review.id, updatedReview)
             .then(() => {
                 actionCreators.updateReviewSuccess(
                     reviewsDispatch,
@@ -57,6 +48,21 @@ const ReviewSingle = ({ review, usersTotal, reviewsDispatch }) => {
                 );
                 actionCreators.updateReviewSuccess(apiDispatch);
                 toast.success("review update succeed");
+            })
+            .catch(err => {
+                actionCreators.apiCallError(apiDispatch);
+                throw err;
+            });
+    };
+
+    const del = async () => {
+        actionCreators.beginApiCall(apiDispatch);
+        await apiUtils
+            .deleteReview(productID, review.id)
+            .then(() => {
+                actionCreators.deleteReviewSuccess(apiDispatch);
+                actionCreators.deleteReviewSuccess(reviewsDispatch, review.id);
+                toast.success("review delete succeed");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
@@ -79,45 +85,45 @@ const ReviewSingle = ({ review, usersTotal, reviewsDispatch }) => {
         }
     };
     const handleTextInputChange = e => setTextInput(e.target.value);
-    const handleStarsInputChange = e => setStarsInput(e.target.value);
+    const handleRatingInputChange = e => setRatingInput(e.target.value);
     const handleCancel = e => {
         e.preventDefault();
         setIsEditing(false);
     };
 
     // JSX chunks
-    const starsJSX = (
+    const ratingJSX = (
         <>
             <label>rating: </label>
             <input
                 type="radio"
                 value="1"
-                checked={starsInput === "1"}
-                onChange={handleStarsInputChange}
+                checked={ratingInput === "1"}
+                onChange={handleRatingInputChange}
             />
             <input
                 type="radio"
                 value="2"
-                checked={starsInput === "2"}
-                onChange={handleStarsInputChange}
+                checked={ratingInput === "2"}
+                onChange={handleRatingInputChange}
             />
             <input
                 type="radio"
                 value="3"
-                checked={starsInput === "3"}
-                onChange={handleStarsInputChange}
+                checked={ratingInput === "3"}
+                onChange={handleRatingInputChange}
             />
             <input
                 type="radio"
                 value="4"
-                checked={starsInput === "4"}
-                onChange={handleStarsInputChange}
+                checked={ratingInput === "4"}
+                onChange={handleRatingInputChange}
             />
             <input
                 type="radio"
                 value="5"
-                checked={starsInput === "5"}
-                onChange={handleStarsInputChange}
+                checked={ratingInput === "5"}
+                onChange={handleRatingInputChange}
             />
         </>
     );
@@ -129,11 +135,13 @@ const ReviewSingle = ({ review, usersTotal, reviewsDispatch }) => {
     return (
         <li>
             <form>
-                <h4>user: {user}</h4>
-                {isEditing ? starsJSX : <h5>Stars: {stars}</h5>}
+                <h4>user: {user.name}</h4>
+                {isEditing ? ratingJSX : <h5>Rating: {rating}</h5>}
                 <h5>
                     Posted on:{" "}
-                    {new Date(review.timeReviewed).toLocaleDateString("en-US")}
+                    {new Date(
+                        review.timeReviewed.seconds * 1000
+                    ).toLocaleDateString("en-US")}
                 </h5>
                 {isEditing ? textJSX : <p>{review.text}</p>}
                 <button

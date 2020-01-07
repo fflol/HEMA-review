@@ -1,40 +1,48 @@
 import React, { useState, useReducer } from "react";
 import PropTypes from "prop-types";
-import nanoid from "nanoid";
 import { toast } from "react-toastify";
+import * as fb from "firebase/app";
 
-import * as apiUtils from "../../tools/apiUtils";
+import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
 import * as reducers from "../../tools/reducer";
+import { firebase } from "../../firebase/firebaseConfig";
 
 //
 // component
 const ReviewInput = ({ productID, reviewsDispatch }) => {
     const [textInput, setTextInput] = useState("");
-    const [stars, setStars] = useState(null);
+    const [ratingInput, setRatingInput] = useState(null);
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
     // CRUD
     const create = async () => {
+        const userRef = firebase
+            .firestore()
+            .collection("users")
+            .doc("9QpN0ED5sJp8VZdsKRdk");
+        const time = fb.firestore.Timestamp.now();
+
         const newReview = {
-            id: nanoid(10),
-            userID: "testID",
-            productID: productID,
-            timeReviewed: Date.now(),
-            starsReview: stars,
+            user: userRef,
+            timeReviewed: time,
+            rating: parseInt(ratingInput),
             text: textInput
         };
+
         actionCreators.beginApiCall(apiDispatch);
         await apiUtils
-            .postReview(newReview)
-            .catch(apiUtils.handleError)
-            .then(() => {
+            .addReview(productID, newReview)
+            .then(id => {
                 actionCreators.createReviewSuccess(apiDispatch);
-                actionCreators.createReviewSuccess(reviewsDispatch, newReview);
+                actionCreators.createReviewSuccess(reviewsDispatch, {
+                    ...newReview,
+                    id
+                });
                 toast.success("review post succeed");
                 setTextInput("");
-                setStars("");
+                setRatingInput("");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
@@ -44,7 +52,7 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
 
     // handlers
     const handleTextInput = e => setTextInput(e.target.value);
-    const handleStarsChange = e => setStars(e.target.value);
+    const handleStarsChange = e => setRatingInput(e.target.value);
     const handleSubmit = async e => {
         e.preventDefault();
         await create();
@@ -56,31 +64,31 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
             <input
                 type="radio"
                 value="1"
-                checked={stars === "1"}
+                checked={ratingInput === "1"}
                 onChange={handleStarsChange}
             />
             <input
                 type="radio"
                 value="2"
-                checked={stars === "2"}
+                checked={ratingInput === "2"}
                 onChange={handleStarsChange}
             />
             <input
                 type="radio"
                 value="3"
-                checked={stars === "3"}
+                checked={ratingInput === "3"}
                 onChange={handleStarsChange}
             />
             <input
                 type="radio"
                 value="4"
-                checked={stars === "4"}
+                checked={ratingInput === "4"}
                 onChange={handleStarsChange}
             />
             <input
                 type="radio"
                 value="5"
-                checked={stars === "5"}
+                checked={ratingInput === "5"}
                 onChange={handleStarsChange}
             />
 

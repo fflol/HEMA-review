@@ -3,6 +3,8 @@ import App from "next/app";
 import { ToastContainer } from "react-toastify";
 
 import Header from "../components/header/Header";
+import Footer from "../components/footer/Footer";
+
 import "react-toastify/dist/ReactToastify.css";
 
 class MyApp extends App {
@@ -23,7 +25,8 @@ class MyApp extends App {
         return (
             <>
                 <Header />
-                <Component {...pageProps} />;
+                <Component {...pageProps} />
+                <Footer />
                 <ToastContainer
                     position="top-right"
                     autoClose={1000}

@@ -1,44 +1,33 @@
-import React from "react";
 import PropTypes from "prop-types";
-import fetch from "isomorphic-unfetch";
+import "firebase/firestore";
 
-import Header from "../components/header/Header";
-import Footer from "../components/footer/Footer";
 import Search from "../components/search/Search";
 import Featured from "../components/feature/Featured";
 import Recent from "../components/recent/Recent";
 
 import * as helpers from "../tools/helpers";
+import * as apiUtils from "../firebase/firebaseApiUtils";
 
 //
 // component
-const Index = ({ products, reviews }) => {
-    // console.log("products: ", products);
+const Index = ({ products }) => {
     const featured = helpers.findFeatured(products);
-    const recentReviewed = helpers.findRecentReviewed(products, reviews);
-    // console.log(recentReviewed);
+    // const recentReviewed = helpers.findRecentReviewed(products, reviews);
+    // console.log(products);
 
     return (
         <>
-            {/* <Header /> */}
             <h1>HEMA Gear Reviews</h1>
             <Search products={products} />
             <Featured featured={featured} />
-            <Recent recentReviewed={recentReviewed} />
-            <Footer />
+            {/* <Recent recentReviewed={recentReviewed} /> */}
         </>
     );
 };
 
 //
 Index.getInitialProps = async () => {
-    const db = await fetch(`${process.env.DEV_URL}/db`)
-        .then(res => res.json())
-        .catch(err => console.log(err));
-    return {
-        products: db.products,
-        reviews: db.reviews
-    };
+    return { products: await apiUtils.getProducts() };
 };
 
 Index.propTypes = {

@@ -1,29 +1,26 @@
-import React, { useState, useReducer } from "react";
-import { useRouter } from "next/router";
+import { useReducer } from "react";
 import PropTypes from "prop-types";
+import "firebase/firestore";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
 import * as helpers from "../../tools/helpers";
 import * as reducers from "../../tools/reducer";
+import * as apiUtils from "../../firebase/firebaseApiUtils";
 
 //
 // component
-const Prod = ({ productsTotal, reviewsTotal, usersTotal }) => {
-    const id = useRouter().query.id;
-    const prod = productsTotal.find(prod => prod.id === id);
-    const reviewsForThisProd = helpers.findReviewsForThisProd(reviewsTotal, id);
-
+const Prod = ({ prod, reviewsProp }) => {
     const [reviews, reviewsDispatch] = useReducer(
         reducers.reviewsReducer,
-        reviewsForThisProd
+        reviewsProp
     );
 
     return (
         <>
             <h1>{prod.name}</h1>
-            <p>reviews: {prod.reviewTotal}</p>
-            <p>stars: {prod.starsAverage}</p>
+            <p>reviews: {prod.reviewsTotal}</p>
+            <p>stars: {prod.ratingAverage}</p>
             <br />
             <ReviewInput
                 productID={prod.id}
@@ -35,8 +32,8 @@ const Prod = ({ productsTotal, reviewsTotal, usersTotal }) => {
                 {reviews.map(review => (
                     <ReviewSingle
                         key={review.id}
+                        productID={prod.id}
                         review={review}
-                        usersTotal={usersTotal}
                         reviewsDispatch={reviewsDispatch}
                     />
                 ))}
@@ -46,14 +43,10 @@ const Prod = ({ productsTotal, reviewsTotal, usersTotal }) => {
 };
 
 //
-Prod.getInitialProps = async () => {
-    const db = await fetch(`${process.env.DEV_URL}/db`)
-        .then(res => res.json())
-        .catch(err => console.log(err));
+Prod.getInitialProps = async ({ query }) => {
     return {
-        productsTotal: db.products,
-        reviewsTotal: db.reviews,
-        usersTotal: db.users
+        prod: await apiUtils.getProd(query.id),
+        reviewsProp: await apiUtils.getReviews(query.id)
     };
 };
 

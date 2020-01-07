@@ -3,7 +3,9 @@ const postsNum = 4;
 
 // find featured products from db product
 export const findFeatured = products =>
-    products.sort((a, b) => a.starsAverage < b.starsAverage).slice(0, postsNum);
+    products
+        .sort((a, b) => a.ratingAverage < b.ratingAverage)
+        .slice(0, postsNum);
 
 // find recent reviewed products based on review.timeReviewed
 export const findRecentReviewed = (products, reviews) => {
