@@ -17,9 +17,9 @@ const Prod = ({ prod, reviewsReceived }) => {
     );
     const userLogged = useContext(userContext);
 
-    const hasUserReviewed = reviews.filter(
-        review => review.user.email === userLogged.email
-    );
+    const hasUserReviewed =
+        reviews.filter(review => review.user.email === userLogged.email)
+            .length > 0;
 
     return (
         <>

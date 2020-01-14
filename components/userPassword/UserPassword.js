@@ -6,7 +6,7 @@ import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
 import * as reducers from "../../tools/reducer";
 
-const UserPassword = () => {
+const UserPassword = ({ setIsEditingPassword }) => {
     const [progress, setProgress] = useState(0);
     const [passwordInput, setPasswordInput] = useState("");
 
@@ -19,6 +19,7 @@ const UserPassword = () => {
             .reAuthenticate(apiUtils.getCredential(passwordInput))
             .then(() => {
                 actionCreators.apiCallSuccess(apiDispatch);
+                toast.success("password recheck succeed");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
@@ -42,7 +43,8 @@ const UserPassword = () => {
     };
 
     // handlers
-    const handleSubmit = async () => {
+    const handleSubmit = async e => {
+        e.preventDefault();
         if (progress === 0) {
             return await reAuth().then(() => {
                 setPasswordInput("");
@@ -53,6 +55,7 @@ const UserPassword = () => {
             return await updatePassword().then(() => {
                 setPasswordInput("");
                 setProgress(0);
+                setIsEditingPassword(false);
             });
         }
     };
@@ -60,7 +63,7 @@ const UserPassword = () => {
     const handlePasswordInputChange = e => setPasswordInput(e.target.value);
 
     return (
-        <>
+        <form onSubmit={handleSubmit}>
             <label>
                 {progress === 0
                     ? "enter existing password"
@@ -71,10 +74,10 @@ const UserPassword = () => {
                 value={passwordInput}
                 onChange={handlePasswordInputChange}
             />
-            <button onClick={handleSubmit} disabled={apiStatus ? true : false}>
+            <button type="submit" disabled={apiStatus ? true : false}>
                 {apiStatus ? "submitting" : "submit password"}
             </button>
-        </>
+        </form>
     );
 };
 

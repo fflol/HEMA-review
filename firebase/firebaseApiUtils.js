@@ -156,7 +156,7 @@ export const updateDBUserNameAndPhoto = async (uid, displayName, photoURL) => {
             ...(displayName && { displayName }),
             ...(photoURL && { photoURL })
         })
-        .then(res => res)
+        // .then(res => res)
         .catch(err => console.log(err));
 };
 
@@ -230,18 +230,20 @@ export const updateAuthUserNameAndPhoto = async (displayName, photoURL) =>
             ...(displayName && { displayName }),
             ...(photoURL && { photoURL })
         })
-        .then(res => res)
+        // .then(res => res)
         .catch(err => console.log("update auth user profile error: ", err));
 
 export const updateAuthUserEmail = async email =>
     await auth.currentUser
         .updateEmail(email)
-        .then(res => console.log(res))
+        // .then(res => res)
         .catch(err => console.log("update auth user email error: ", err));
 
 export const updateAuthUserPassword = async password => {
     await auth.currentUser
         .updatePassword(password)
-        .then(res => res)
+        // .then(res => res)
         .catch(err => console.log("update auth user email error: ", err));
 };
+
+export const signOut = () => auth.signOut();

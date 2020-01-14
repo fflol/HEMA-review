@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "firebase/auth";
 
 import UserProfile from "../../components/userProfile/UserProfile";
+import UserEmail from "../../components/userEmail/UserEmail";
 import UserPassword from "../../components/userPassword/UserPassword";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import { userContext } from "../../tools/reactContext";
@@ -12,7 +13,8 @@ import { FbTimestampToReadable } from "../../tools/timeFormat";
 //
 // component
 const User = ({ user }) => {
-    const [isEditing, setIsEditing] = useState(false); // condition 1
+    const [isEditingProfile, setIsEditingProfile] = useState(false); // condition 1
+    const [isEditingEmail, setIsEditingEmail] = useState(false); // condition 2
     const [isEditingPassword, setIsEditingPassword] = useState(false); // condition 2
     const [nameInput, setNameInput] = useState(user.displayName || "");
     const [emailInput, setEmailInput] = useState(user.email);
@@ -24,13 +26,20 @@ const User = ({ user }) => {
     const timeJoined = FbTimestampToReadable(user.timeRegistered.seconds);
 
     // handlers
-    const handleEditStart = () => setIsEditing(!isEditing);
+    const handleEditProfile = () => setIsEditingProfile(!isEditingProfile);
+    const handleEditEmail = () => setIsEditingEmail(!isEditingEmail);
     const handleEditPassword = () => setIsEditingPassword(!isEditingPassword);
 
     // JSX chunks
     const editProfileButton = (
-        <button onClick={handleEditStart}>
-            {isEditing ? "cancel editing" : "edit your profile"}
+        <button onClick={handleEditProfile}>
+            {isEditingProfile ? "cancel editing" : "edit your profile"}
+        </button>
+    );
+
+    const editEmailButton = (
+        <button onClick={handleEditEmail}>
+            {isEditingEmail ? "cancel editing" : "edit your email"}
         </button>
     );
 
@@ -42,14 +51,12 @@ const User = ({ user }) => {
 
     return (
         <>
-            {isEditing ? (
+            {isEditingProfile ? (
                 <UserProfile
                     nameInput={nameInput}
                     setNameInput={setNameInput}
-                    emailInput={emailInput}
-                    setEmailInput={setEmailInput}
                     user={user}
-                    setIsEditing={setIsEditing}
+                    setIsEditingProfile={setIsEditingProfile}
                 />
             ) : (
                 <>
@@ -57,11 +64,24 @@ const User = ({ user }) => {
                         name: {user.displayName ? nameInput : "haven't setup"}
                     </h1>
                     <p>photo:{user.photoURL}</p>
-                    <p>email: {emailInput}</p>
                 </>
             )}
             {isOwnUser && editProfileButton}
-            {isOwnUser && isEditingPassword && <UserPassword />}
+            {isEditingEmail ? (
+                <UserEmail
+                    emailInput={emailInput}
+                    setEmailInput={setEmailInput}
+                    user={user}
+                    setIsEditingEmail={setIsEditingEmail}
+                />
+            ) : (
+                <p>email: {emailInput}</p>
+            )}
+            {isOwnUser && editEmailButton}
+            <br />
+            {isOwnUser && isEditingPassword && (
+                <UserPassword setIsEditingPassword={setIsEditingPassword} />
+            )}
             {isOwnUser && editPasswordButton}
             <p>reviews: {user.reviews}</p>
             <p>joined since: {timeJoined}</p>

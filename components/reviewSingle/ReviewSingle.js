@@ -25,7 +25,7 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
     const author = review.user;
     const rating = review.rating;
     const timeReviewed = FbTimestampToReadable(review.timeReviewed.seconds);
-    const isOwnReview = author.email === rLogged.email; // condition 2
+    const isOwnReview = author.email === userLogged.email; // condition 2
 
     // CRUD
     const update = async () => {

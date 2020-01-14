@@ -10,9 +10,7 @@ const UserProfile = ({
     user,
     nameInput,
     setNameInput,
-    emailInput,
-    setEmailInput,
-    setIsEditing
+    setIsEditingProfile
 }) => {
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
@@ -23,9 +21,6 @@ const UserProfile = ({
             .updateAuthUserNameAndPhoto(nameInput, null)
             .then(() => {
                 actionCreators.apiCallSuccess(apiDispatch);
-                if (apiStatus === 0) {
-                    toast.success("user info update succeed");
-                }
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
@@ -38,59 +33,29 @@ const UserProfile = ({
             .updateDBUserNameAndPhoto(user.uid, nameInput, null)
             .then(() => {
                 actionCreators.apiCallSuccess(apiDispatch);
-                if (apiStatus === 0) toast.success("user info update succeed");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
-                toast.error("user info update failed");
-                throw err;
-            });
-    };
-
-    const updateEmail = async () => {
-        actionCreators.beginApiCall(apiDispatch);
-        await apiUtils
-            .updateAuthUserEmail(emailInput)
-            .then(() => {
-                actionCreators.apiCallSuccess(apiDispatch);
-                if (apiStatus === 0) toast.success("user info update succeed");
-            })
-            .catch(err => {
-                actionCreators.apiCallError(apiDispatch);
-                toast.error("user info update failed");
-                throw err;
-            });
-
-        actionCreators.beginApiCall(apiDispatch);
-        await apiUtils
-            .updateDBUserEmail(user.uid, emailInput)
-            .then(() => {
-                actionCreators.apiCallSuccess(apiDispatch);
-                if (apiStatus === 0) toast.success("user info update succeed");
-            })
-            .catch(err => {
-                actionCreators.apiCallError(apiDispatch);
-                toast.error("user info update failed");
+                toast.error("user profile update failed");
                 throw err;
             });
     };
 
     // handlers
     const handleNameInputChange = e => setNameInput(e.target.value);
-    const handleEmailInputChange = e => setEmailInput(e.target.value);
 
     const handleSubmit = async e => {
         e.preventDefault();
         if (nameInput !== user.displayName) {
-            await updateNameAndPhoto().then(() => setIsEditing(false));
-        }
-        if (emailInput !== user.email) {
-            await updateEmail().then(() => setIsEditing(false));
+            await updateNameAndPhoto().then(() => {
+                toast.success("user profile update succeed");
+                setIsEditingProfile(false);
+            });
         }
     };
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div>
                 <h1>
                     name:
@@ -104,15 +69,7 @@ const UserProfile = ({
             <div>
                 <p>photo: {user.photoURL}</p>
             </div>
-            <div>
-                email:
-                <input
-                    type="email"
-                    value={emailInput}
-                    onChange={handleEmailInputChange}
-                />
-            </div>
-            <button onClick={handleSubmit} disabled={apiStatus ? true : false}>
+            <button type="submit" disabled={apiStatus ? true : false}>
                 {apiStatus ? "submitting" : "submit edit"}
             </button>
         </form>
