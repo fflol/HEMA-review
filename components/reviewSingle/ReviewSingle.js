@@ -1,56 +1,68 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
-import * as fb from "firebase/app";
 
+import { firebase } from "../../firebase/firebaseConfig";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
 import * as reducers from "../../tools/reducer";
-import { firebase } from "../../firebase/firebaseConfig";
+import * as dbFormat from "../../tools/dbFormat";
+import { userContext } from "../../tools/reactContext";
+import { FbTimestampToReadable } from "../../tools/timeFormat";
 
 //
 // component
 const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // condition 1
     const [textInput, setTextInput] = useState(review.text);
     const [ratingInput, setRatingInput] = useState("" + review.rating);
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
+    const userLogged = useContext(userContext);
+
     // vars
-    const user = review.user;
+    const author = review.user;
     const rating = review.rating;
+    const timeReviewed = FbTimestampToReadable(review.timeReviewed.seconds);
+    const isOwnReview = author.email === rLogged.email; // condition 2
 
     // CRUD
     const update = async () => {
         const userRef = firebase
             .firestore()
             .collection("users")
-            .doc("9QpN0ED5sJp8VZdsKRdk");
-        const time = fb.firestore.Timestamp.now();
+            .doc(userLogged.uid);
 
-        const updatedReview = {
-            id: review.id,
-            user: userRef,
-            timeReviewed: time,
-            rating: parseInt(ratingInput),
-            text: textInput
+        const userObj = {
+            uid: userLogged.uid,
+            email: userLogged.email,
+            ...(userLogged.displayName && {
+                displayName: userLogged.displayName
+            })
         };
+
+        const updatedReview = dbFormat.createReview(
+            userRef,
+            ratingInput,
+            textInput,
+            userObj
+        );
 
         actionCreators.beginApiCall(apiDispatch);
         await apiUtils
             .setReview(productID, review.id, updatedReview)
             .then(() => {
-                actionCreators.updateReviewSuccess(
-                    reviewsDispatch,
-                    review.id,
-                    updatedReview
-                );
+                actionCreators.updateReviewSuccess(reviewsDispatch, review.id, {
+                    id: review.id,
+                    ...updatedReview
+                });
                 actionCreators.updateReviewSuccess(apiDispatch);
                 toast.success("review update succeed");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
+                toast.error("review update failed");
                 throw err;
             });
     };
@@ -66,6 +78,7 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
+                toast.error("review update failed");
                 throw err;
             });
     };
@@ -80,8 +93,7 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
         e.preventDefault();
         if (!isEditing) setIsEditing(!isEditing);
         else {
-            await update();
-            setIsEditing(false);
+            await update().then(() => setIsEditing(false));
         }
     };
     const handleTextInputChange = e => setTextInput(e.target.value);
@@ -132,33 +144,33 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
         <textarea value={textInput} onChange={handleTextInputChange} />
     );
 
+    const deleteButton = (
+        <button onClick={handleDelete} disabled={apiStatus ? true : false}>
+            {apiStatus ? "deleting" : "delete"}
+        </button>
+    );
+
+    const editButton = (
+        <button onClick={handleEdit} disabled={apiStatus ? true : false}>
+            {isEditing ? (apiStatus ? "submiting" : "submit") : "edit"}
+        </button>
+    );
+
+    const cancelButton = <button onClick={handleCancel}>cancel editing</button>;
+
     return (
         <li>
             <form>
-                <h4>user: {user.name}</h4>
+                <h4>
+                    author:{" "}
+                    {author.displayName ? author.displayName : author.email}
+                </h4>
                 {isEditing ? ratingJSX : <h5>Rating: {rating}</h5>}
-                <h5>
-                    Posted on:{" "}
-                    {new Date(
-                        review.timeReviewed.seconds * 1000
-                    ).toLocaleDateString("en-US")}
-                </h5>
+                <h5>Posted on: {timeReviewed}</h5>
                 {isEditing ? textJSX : <p>{review.text}</p>}
-                <button
-                    onClick={handleDelete}
-                    disabled={apiStatus ? true : false}
-                >
-                    {apiStatus ? "deleting" : "delete"}
-                </button>
-                <button
-                    onClick={handleEdit}
-                    disabled={apiStatus ? true : false}
-                >
-                    {isEditing ? (apiStatus ? "submiting" : "submit") : "edit"}
-                </button>
-                {isEditing && (
-                    <button onClick={handleCancel}>cancel editing</button>
-                )}
+                {isOwnReview && deleteButton}
+                {isOwnReview && editButton}
+                {isEditing && cancelButton}
             </form>
         </li>
     );

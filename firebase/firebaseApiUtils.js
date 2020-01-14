@@ -1,15 +1,18 @@
+import * as fb from "firebase/app";
 import { firebase } from "./firebaseConfig";
+import "firebase/firestore";
+import "firebase/auth";
 
 const db = firebase.firestore();
 
 //
-//CRUD -- C UD
+//review CRUD -- C UD
 export const addReview = async (productID, newReview) =>
     await db
         .collection("products")
         .doc(productID)
         .collection("reviews")
-        .add(newReview)
+        .add(newReview) // generates new id
         .then(res => res.id)
         .catch(err => console.log(err));
 
@@ -27,65 +30,52 @@ export const setReview = async (productID, reviewID, updatedReview) =>
         .collection("products")
         .doc(productID)
         .collection("reviews")
-        .doc(reviewID)
+        .doc(reviewID) //need this id to update
         .set(updatedReview)
         .catch(err => console.log(err));
 
 //
-// CRUD -- Read
-
+// review CRUD -- Read
 export const getProducts = async () => {
     let products = [];
 
-    // get products
     await db
         .collection("products")
         .get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
-                products.push({ id: doc.id, ...doc.data() });
+                const prod = { id: doc.id, ...doc.data() };
+                const { businessRef, ...rest } = prod;
+                products.push(rest);
             });
         })
         .catch(error => {
             console.log("Error getting products:", error);
         });
 
-    // simplify business reference from products
-    const simplifiedProducts = await Promise.all(
-        products.map(async prod => {
-            const business = await prod.business
-                .get()
-                .then(snapshot => snapshot.data())
-                .catch(error => {
-                    console.log("Error getting products:", error);
-                });
-            return { ...prod, business };
-        })
-    );
-    return simplifiedProducts;
+    return products;
 };
 
-export const getProd = async id => {
+export const getProd = async productID => {
     const prod = await db
         .collection("products")
-        .doc(id)
+        .doc(productID)
         .get()
         .then(doc => {
-            if (doc.exists) return doc.data();
-            else {
+            if (doc.exists) {
+                const objWithID = { id: productID, ...doc.data() };
+                const { businessRef, ...rest } = objWithID;
+                return rest;
+            } else {
                 console.log("No such document!");
                 return null;
             }
         })
         .catch(error => {
-            console.log("Error getting document:", error);
+            console.log("Error getting prod:", error);
         });
 
-    const simplifiedProd = await prod.business.get().then(snapshot => {
-        return { ...prod, business: snapshot.data(), id };
-    });
-
-    return simplifiedProd;
+    return prod;
 };
 
 export const getReviews = async productID => {
@@ -98,21 +88,160 @@ export const getReviews = async productID => {
         .get()
         .then(Snapshot => {
             Snapshot.forEach(doc => {
-                reviews.push({ id: doc.id, ...doc.data() });
+                const objWithID = { id: doc.id, ...doc.data() };
+                const { userRef, ...rest } = objWithID;
+                reviews.push(rest);
             });
         })
         .catch(error => {
-            console.log("Error getting documents: ", error);
+            console.log("Error getting reviews: ", error);
         });
 
-    const simplifiedReviews = await Promise.all(
-        reviews.map(async review => {
-            const user = await review.user
-                .get()
-                .then(snapshot => snapshot.data());
-            return { ...review, user };
-        })
-    );
+    return reviews;
+};
 
-    return simplifiedReviews;
+//
+// businesses CRUD -- read
+export const getBusinesses = async () => {
+    const businesses = [];
+    await db
+        .collection("businesses")
+        .get()
+        .then(Snapshot => {
+            Snapshot.forEach(doc => {
+                businesses.push({ id: doc.id, ...doc.data() });
+            });
+        })
+        .catch(error => {
+            console.log("Error getting businesses:", error);
+        });
+
+    return businesses;
+};
+
+export const getBusiness = async businessID => {
+    const business = await db
+        .collection("businesses")
+        .doc(businessID)
+        .get()
+        .then(doc => {
+            if (doc.exists) {
+                return doc.data();
+            } else {
+                console.log("No such document!");
+                return null;
+            }
+        })
+        .catch(error => {
+            console.log("Error getting business:", error);
+        });
+
+    return business;
+};
+
+// user CRUD --C U
+export const setUser = async (uid, newUser) =>
+    await db
+        .collection("users")
+        .doc(uid) // use existing id
+        .set(newUser)
+        .then(res => res)
+        .catch(err => console.log(err));
+
+export const updateDBUserNameAndPhoto = async (uid, displayName, photoURL) => {
+    await db
+        .collection("users")
+        .doc(uid)
+        .update({
+            ...(displayName && { displayName }),
+            ...(photoURL && { photoURL })
+        })
+        .then(res => res)
+        .catch(err => console.log(err));
+};
+
+export const updateDBUserEmail = async (uid, email) => {
+    await db
+        .collection("users")
+        .doc(uid)
+        .update({ email })
+        .then(res => res)
+        .catch(err => console.log(err));
+};
+
+// user CRUD --read
+export const getUsers = async () => {
+    const users = [];
+    await db
+        .collection("users")
+        .get()
+        .then(Snapshot => {
+            Snapshot.forEach(doc => {
+                users.push({ uid: doc.id, ...doc.data() });
+            });
+        })
+        .catch(error => {
+            console.log("Error getting users:", error);
+        });
+
+    return users;
+};
+
+export const getUser = async uid => {
+    const user = await db
+        .collection("users")
+        .doc(uid)
+        .get()
+        .then(doc => {
+            if (doc.exists) {
+                return doc.data();
+            } else {
+                console.log("No such document!");
+                return null;
+            }
+        })
+        .catch(error => {
+            console.log("Error getting user:", error);
+        });
+
+    return user;
+};
+
+//
+//  ---------- firebase auth ----------
+// CRUD
+
+const auth = firebase.auth();
+
+export const getCredential = password => {
+    return fb.auth.EmailAuthProvider.credential(
+        auth.currentUser.email,
+        password
+    );
+};
+
+export const reAuthenticate = async credential => {
+    await auth.currentUser.reauthenticateWithCredential(credential);
+};
+
+export const updateAuthUserNameAndPhoto = async (displayName, photoURL) =>
+    await auth.currentUser
+        .updateProfile({
+            ...(displayName && { displayName }),
+            ...(photoURL && { photoURL })
+        })
+        .then(res => res)
+        .catch(err => console.log("update auth user profile error: ", err));
+
+export const updateAuthUserEmail = async email =>
+    await auth.currentUser
+        .updateEmail(email)
+        .then(res => console.log(res))
+        .catch(err => console.log("update auth user email error: ", err));
+
+export const updateAuthUserPassword = async password => {
+    await auth.currentUser
+        .updatePassword(password)
+        .then(res => res)
+        .catch(err => console.log("update auth user email error: ", err));
 };

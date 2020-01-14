@@ -1,31 +1,47 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
 import PropTypes from "prop-types";
-import "firebase/firestore";
+import Link from "next/link";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
-import * as helpers from "../../tools/helpers";
 import * as reducers from "../../tools/reducer";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
+import { userContext } from "../../tools/reactContext";
 
 //
 // component
-const Prod = ({ prod, reviewsProp }) => {
+const Prod = ({ prod, reviewsReceived }) => {
     const [reviews, reviewsDispatch] = useReducer(
         reducers.reviewsReducer,
-        reviewsProp
+        reviewsReceived
+    );
+    const userLogged = useContext(userContext);
+
+    const hasUserReviewed = reviews.filter(
+        review => review.user.email === userLogged.email
     );
 
     return (
         <>
             <h1>{prod.name}</h1>
             <p>reviews: {prod.reviewsTotal}</p>
-            <p>stars: {prod.ratingAverage}</p>
+            <p>rating: {prod.ratingAverage}</p>
+            <p>
+                from:
+                <Link
+                    href="/business/[id]"
+                    as={`/business/${prod.business.id}`}
+                >
+                    <a>{prod.business.name}</a>
+                </Link>
+            </p>
             <br />
-            <ReviewInput
-                productID={prod.id}
-                reviewsDispatch={reviewsDispatch}
-            />
+            {!hasUserReviewed && (
+                <ReviewInput
+                    productID={prod.id}
+                    reviewsDispatch={reviewsDispatch}
+                />
+            )}
             <br />
             <h3>Reviews: </h3>
             <ul>
@@ -46,7 +62,7 @@ const Prod = ({ prod, reviewsProp }) => {
 Prod.getInitialProps = async ({ query }) => {
     return {
         prod: await apiUtils.getProd(query.id),
-        reviewsProp: await apiUtils.getReviews(query.id)
+        reviewsReceived: await apiUtils.getReviews(query.id)
     };
 };
 

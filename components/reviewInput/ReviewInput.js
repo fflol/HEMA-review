@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import * as fb from "firebase/app";
@@ -7,6 +7,8 @@ import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
 import * as reducers from "../../tools/reducer";
 import { firebase } from "../../firebase/firebaseConfig";
+import * as dbFormat from "../../tools/dbFormat";
+import { userContext } from "../../tools/reactContext";
 
 //
 // component
@@ -16,20 +18,29 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
+    const userLogged = useContext(userContext);
+
     // CRUD
     const create = async () => {
         const userRef = firebase
             .firestore()
             .collection("users")
-            .doc("9QpN0ED5sJp8VZdsKRdk");
-        const time = fb.firestore.Timestamp.now();
+            .doc(userLogged.uid);
 
-        const newReview = {
-            user: userRef,
-            timeReviewed: time,
-            rating: parseInt(ratingInput),
-            text: textInput
+        const userObj = {
+            uid: userLogged.uid,
+            email: userLogged.email,
+            ...(userLogged.displayName && {
+                displayName: userLogged.displayName
+            })
         };
+
+        const newReview = dbFormat.createReview(
+            userRef,
+            ratingInput,
+            textInput,
+            userObj
+        );
 
         actionCreators.beginApiCall(apiDispatch);
         await apiUtils

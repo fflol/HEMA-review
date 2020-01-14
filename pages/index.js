@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import "firebase/firestore";
+// import "firebase/firestore";
 
 import Search from "../components/search/Search";
 import Featured from "../components/feature/Featured";

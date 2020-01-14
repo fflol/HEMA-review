@@ -6,6 +6,9 @@ export const beginApiCall = dispatch =>
 export const apiCallError = dispatch =>
     dispatch({ type: actionTypes.API_CALL_ERROR });
 
+export const apiCallSuccess = dispatch =>
+    dispatch({ type: actionTypes.API_CALL_SUCCESS });
+
 export const createReviewSuccess = (dispatch, newReview) =>
     dispatch({
         type: actionTypes.CREATE_REVIEW_SUCCESS,

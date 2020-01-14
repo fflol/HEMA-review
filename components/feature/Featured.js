@@ -14,8 +14,8 @@ const Featured = ({ featured }) => {
                                 <a>{prod.name}</a>
                             </Link>
                         </h3>
-                        <p>stars: {prod.starsAverage}</p>
-                        <p>reviews:{prod.reviewTotal}</p>
+                        <p>stars: {prod.ratingAverage}</p>
+                        <p>reviews:{prod.reviewsTotal}</p>
                     </li>
                 ))}
             </ul>
