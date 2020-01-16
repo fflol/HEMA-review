@@ -1,17 +1,19 @@
 import React, { useContext } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import "firebase/auth";
+import { toast } from "react-toastify";
 
 import { userContext } from "../../tools/reactContext";
-import { firebase } from "../../firebase/firebaseConfig";
+import * as apiUtiles from "../../firebase/firebaseApiUtils";
 
 const Header = () => {
     const userLogged = useContext(userContext);
     const handleSignOut = () =>
-        firebase
-            .auth()
+        apiUtiles
             .signOut()
+            .then(() => {
+                toast.success("you are logged out");
+            })
             .catch(err => console.log(err));
     return (
         <header>

@@ -13,6 +13,7 @@ export const createUser = (
     email,
     photoURL,
     emailVerified,
+    provider,
     timeRegistered,
     reviews
 ) => ({
@@ -20,6 +21,7 @@ export const createUser = (
     email,
     photoURL,
     emailVerified,
+    provider,
     ...(timeRegistered && { timeRegistered }),
-    ...(reviews && { reviews })
+    ...(reviews || (reviews === 0 && { reviews }))
 });

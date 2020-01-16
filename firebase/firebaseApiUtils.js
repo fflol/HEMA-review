@@ -246,4 +246,4 @@ export const updateAuthUserPassword = async password => {
         .catch(err => console.log("update auth user email error: ", err));
 };
 
-export const signOut = () => auth.signOut();
+export const signOut = async () => await auth.signOut();

@@ -15,14 +15,15 @@ import { FbTimestampToReadable } from "../../tools/timeFormat";
 const User = ({ user }) => {
     const [isEditingProfile, setIsEditingProfile] = useState(false); // condition 1
     const [isEditingEmail, setIsEditingEmail] = useState(false); // condition 2
-    const [isEditingPassword, setIsEditingPassword] = useState(false); // condition 2
+    const [isEditingPassword, setIsEditingPassword] = useState(false); // condition 3
     const [nameInput, setNameInput] = useState(user.displayName || "");
     const [emailInput, setEmailInput] = useState(user.email);
 
     const userLogged = useContext(userContext);
 
     // vars
-    const isOwnUser = user.email === userLogged.email; // condition 3
+    const isOwnUser = user.email === userLogged.email; // condition 4
+    const isProvidedByFirebase = user.provider === "password";
     const timeJoined = FbTimestampToReadable(user.timeRegistered.seconds);
 
     // handlers
@@ -59,12 +60,12 @@ const User = ({ user }) => {
                     setIsEditingProfile={setIsEditingProfile}
                 />
             ) : (
-                <>
+                <div>
                     <h1>
                         name: {user.displayName ? nameInput : "haven't setup"}
                     </h1>
-                    <p>photo:{user.photoURL}</p>
-                </>
+                    <img src={user.photoURL} alt="user photo" />
+                </div>
             )}
             {isOwnUser && editProfileButton}
             {isEditingEmail ? (
@@ -77,12 +78,12 @@ const User = ({ user }) => {
             ) : (
                 <p>email: {emailInput}</p>
             )}
-            {isOwnUser && editEmailButton}
+            {isOwnUser && isProvidedByFirebase && editEmailButton}
             <br />
             {isOwnUser && isEditingPassword && (
                 <UserPassword setIsEditingPassword={setIsEditingPassword} />
             )}
-            {isOwnUser && editPasswordButton}
+            {isOwnUser && isProvidedByFirebase && editPasswordButton}
             <p>reviews: {user.reviews}</p>
             <p>joined since: {timeJoined}</p>
         </>

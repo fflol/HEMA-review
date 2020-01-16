@@ -23,8 +23,7 @@ const Auth = () => {
 
     const handleSignIn = async e => {
         e.preventDefault();
-
-        if (firebase.auth().currentUser) firebase.auth().signOut();
+        // if (firebase.auth().currentUser) firebase.auth().signOut();
 
         if (email.length < 4)
             return console.log("Please enter an email address.");
@@ -66,8 +65,10 @@ const Auth = () => {
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then(res => {
+                console.log(res);
                 actionCreators.apiCallSuccess(apiDispatch);
                 const timeRegistered = fb.firestore.Timestamp.now();
+                const provider = res.user.providerData[0].providerId;
                 const {
                     displayName,
                     email,
@@ -82,6 +83,7 @@ const Auth = () => {
                         email,
                         photoURL,
                         emailVerified,
+                        provider,
                         timeRegistered,
                         0
                     )
@@ -97,6 +99,48 @@ const Auth = () => {
                 }
                 console.log(error);
                 actionCreators.apiCallError(apiDispatch);
+            });
+    };
+
+    const handleSignUpWithGoogle = async () => {
+        const provider = new fb.auth.GoogleAuthProvider();
+        actionCreators.beginApiCall(apiDispatch);
+        await firebase
+            .auth()
+            .signInWithPopup(provider)
+            .then(res => {
+                actionCreators.apiCallSuccess(apiDispatch);
+                if (res.additionalUserInfo.isNewUser) {
+                    const timeRegistered = fb.firestore.Timestamp.now();
+                    const provider = res.user.providerData[0].providerId;
+                    const {
+                        displayName,
+                        email,
+                        photoURL,
+                        emailVerified,
+                        uid
+                    } = res.user;
+                    apiUtils.setUser(
+                        uid,
+                        dbFormat.createUser(
+                            displayName,
+                            email,
+                            photoURL,
+                            emailVerified,
+                            provider,
+                            timeRegistered,
+                            0
+                        )
+                    );
+                }
+            })
+            .catch(err => {
+                actionCreators.apiCallError(apiDispatch);
+                // var errorCode = err.code;
+                var errorMessage = err.message;
+                // var email = err.email;
+                // var credential = err.credential;
+                console.log(errorMessage);
             });
     };
 
@@ -122,6 +166,9 @@ const Auth = () => {
                 />
                 <button>{toSignIn ? "sign in" : "sign up"}</button>
             </form>
+            <button onClick={handleSignUpWithGoogle}>
+                sign in with Google
+            </button>
         </>
     );
 };
