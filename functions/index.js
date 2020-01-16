@@ -8,7 +8,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 //
-// ----func----
+// ---- update last reviewed time of a product ----
 exports.updateLastReview = functions.firestore
     .document("/products/{prodID}/reviews/{review}") // watching on all reviews under prod
     .onWrite(async (change, context) => {
@@ -40,7 +40,7 @@ exports.updateLastReview = functions.firestore
     });
 
 //
-// ----func----
+// ---- calculate average rating score of a product ----
 exports.calculateRatingAverage = functions.firestore
     .document("/products/{prodID}/reviews/{review}")
     .onWrite(async (change, context) => {
@@ -79,7 +79,7 @@ exports.calculateRatingAverage = functions.firestore
     });
 
 //
-// ----func----
+// ---- calculate total review quantity of a product ----
 exports.calculateTotalReviews = functions.firestore
     .document("/products/{prodID}/reviews/{review}")
     .onWrite(async (change, context) => {
@@ -102,7 +102,7 @@ exports.calculateTotalReviews = functions.firestore
     });
 
 //
-// ----func----
+// ---- caluculate total review quantity of a user----
 exports.calculateUserReviews = functions.firestore
     .document("/products/{prodID}/reviews/{review}")
     .onWrite(async (change, context) => {
