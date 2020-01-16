@@ -38,7 +38,6 @@ export const setReview = async (productID, reviewID, updatedReview) =>
 // review CRUD -- Read
 export const getProducts = async () => {
     let products = [];
-
     await db
         .collection("products")
         .get()

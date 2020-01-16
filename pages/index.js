@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-// import "firebase/firestore";
 
 import Search from "../components/search/Search";
 import Featured from "../components/feature/Featured";
@@ -12,8 +11,6 @@ import * as apiUtils from "../firebase/firebaseApiUtils";
 // component
 const Index = ({ products }) => {
     const featured = helpers.findFeatured(products);
-    // const recentReviewed = helpers.findRecentReviewed(products, reviews);
-    // console.log(products);
 
     return (
         <>

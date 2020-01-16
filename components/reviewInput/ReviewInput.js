@@ -47,13 +47,13 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
             .addReview(productID, newReview)
             .then(id => {
                 actionCreators.createReviewSuccess(apiDispatch);
+                toast.success("review post succeed");
+                setTextInput("");
+                setRatingInput("");
                 actionCreators.createReviewSuccess(reviewsDispatch, {
                     ...newReview,
                     id
                 });
-                toast.success("review post succeed");
-                setTextInput("");
-                setRatingInput("");
             })
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
