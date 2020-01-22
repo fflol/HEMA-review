@@ -1,8 +1,8 @@
 // mixins
-const postsNum = 4;
+const postsNum = 6;
 
-// find featured products from db product
-export const findFeatured = products =>
+// find the highest rated from db product
+export const findHighRated = products =>
     products
         .sort((a, b) => a.ratingAverage < b.ratingAverage)
         .slice(0, postsNum);
@@ -50,3 +50,9 @@ export const search = (products, input) => {
         product.name.toLowerCase().includes(input.toLowerCase())
     );
 };
+
+// ally props for Material UI tab component
+export const a11yProps = index => ({
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`
+});
