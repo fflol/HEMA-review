@@ -1,9 +1,10 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Container from "@material-ui/core/Container";
 
 import ProdList from "../components/prodList/ProdList";
 import * as helpers from "../tools/helpers";
@@ -16,12 +17,13 @@ const Index = ({ products }) => {
 
     // vars
     const highestRatedProd = helpers.findHighRated(products);
+    const recentReviewed = helpers.findRecentReviewed(products);
 
     // handlers
     const handleTabChange = (event, newValue) => setTabValue(newValue);
 
     return (
-        <Container maxWidth="sm">
+        <>
             <Tabs
                 value={tabValue}
                 onChange={handleTabChange}
@@ -30,8 +32,16 @@ const Index = ({ products }) => {
                 <Tab label="highest rate" {...helpers.a11yProps(0)} />
                 <Tab label="recent reviewed" {...helpers.a11yProps(1)} />
             </Tabs>
-            <ProdList products={highestRatedProd} />
-        </Container>
+            <Paper square>
+                <Box p={1} mb={1}>
+                    <ProdList
+                        products={
+                            tabValue === 0 ? highestRatedProd : recentReviewed
+                        }
+                    />
+                </Box>
+            </Paper>
+        </>
     );
 };
 

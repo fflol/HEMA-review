@@ -31,7 +31,7 @@ export const setReview = async (productID, reviewID, updatedReview) =>
         .doc(productID)
         .collection("reviews")
         .doc(reviewID) //need this id to update
-        .set(updatedReview)
+        .set(updatedReview, { merge: true }) // merge instead of overwrite
         .catch(err => console.log(err));
 
 //

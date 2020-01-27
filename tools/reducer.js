@@ -12,7 +12,7 @@ export const reviewsReducer = (state, action) => {
             );
             return [
                 ...state.slice(0, targetIndex),
-                action.updatedReview,
+                { ...state[targetIndex], ...action.updatedReview },
                 ...state.slice(targetIndex + 1)
             ];
         case actionTypes.DELETE_REVIEW_SUCCESS:

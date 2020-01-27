@@ -1,12 +1,20 @@
-import { useReducer, useContext } from "react";
+import { useReducer, useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
+
+// import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import List from "@material-ui/core/List";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
 import * as reducers from "../../tools/reducer";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import { userContext } from "../../tools/reactContext";
+import SignIn from "../../components/header/SignIn";
+import { useStyles } from "../../styles/styles";
 
 //
 // component
@@ -17,43 +25,73 @@ const Prod = ({ prod, reviewsReceived }) => {
     );
     const userLogged = useContext(userContext);
 
-    const hasUserReviewed =
+    const classes = useStyles();
+
+    const [hasUserReviewed, setHasUserReviewed] = useState(
         reviews.filter(review => review.user.email === userLogged.email)
-            .length > 0;
+            .length > 0 // check if reviews has a user === logged user
+    );
+
+    useEffect(() => {
+        setHasUserReviewed(
+            reviews.filter(review => review.user.email === userLogged.email)
+                .length > 0
+        );
+    }, [reviews]); // re-checks every time when reviews updates
 
     return (
         <>
-            <h1>{prod.name}</h1>
-            <p>reviews: {prod.reviewsTotal}</p>
-            <p>rating: {prod.ratingAverage}</p>
-            <p>
-                from:
-                <Link
-                    href="/business/[id]"
-                    as={`/business/${prod.business.id}`}
-                >
-                    <a>{prod.business.name}</a>
-                </Link>
-            </p>
-            <br />
-            {!hasUserReviewed && (
-                <ReviewInput
-                    productID={prod.id}
-                    reviewsDispatch={reviewsDispatch}
-                />
-            )}
-            <br />
-            <h3>Reviews: </h3>
-            <ul>
-                {reviews.map(review => (
-                    <ReviewSingle
-                        key={review.id}
-                        productID={prod.id}
-                        review={review}
-                        reviewsDispatch={reviewsDispatch}
-                    />
-                ))}
-            </ul>
+            <Paper square>
+                <Box p={1} mb={1}>
+                    <Typography variant="h4">{prod.name}</Typography>
+                    <Typography variant="subtitle1">
+                        reviews: {prod.reviewsTotal}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                        rating: {prod.ratingAverage}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                        from:{" "}
+                        <Link
+                            href="/business/[id]"
+                            as={`/business/${prod.business.id}`}
+                        >
+                            <a>{prod.business.name}</a>
+                        </Link>
+                    </Typography>
+                </Box>
+            </Paper>
+            <Paper square>
+                <Box p={1} mb={1}>
+                    {!userLogged.email ? (
+                        <div className={classes.prodSignInText}>
+                            <SignIn /> to review this product
+                        </div>
+                    ) : (
+                        !hasUserReviewed && (
+                            <ReviewInput
+                                productID={prod.id}
+                                reviewsDispatch={reviewsDispatch}
+                            />
+                        )
+                    )}
+                </Box>
+            </Paper>
+            <Paper square>
+                <Box p={1} mb={1} whiteSpace="pre-wrap">
+                    <Typography variant="h6">Reviews: </Typography>
+                    <List>
+                        {reviews.map(review => (
+                            <ReviewSingle
+                                key={review.id}
+                                productID={prod.id}
+                                review={review}
+                                reviewsDispatch={reviewsDispatch}
+                            />
+                        ))}
+                    </List>
+                </Box>
+            </Paper>
         </>
     );
 };
@@ -66,6 +104,9 @@ Prod.getInitialProps = async ({ query }) => {
     };
 };
 
-Prod.propTypes = {};
+Prod.propTypes = {
+    prod: PropTypes.object.isRequired,
+    reviewsReceived: PropTypes.array.isRequired
+};
 
 export default Prod;

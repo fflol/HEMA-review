@@ -9,8 +9,8 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.common.white
     },
     avatarSize: {
-        height: 30,
-        width: 30
+        height: theme.spacing(4),
+        width: theme.spacing(4)
     },
     title: {
         display: "none",
@@ -66,10 +66,10 @@ export const useStyles = makeStyles(theme => ({
         }
     },
     loginDialog: {
-        padding: 20
+        padding: theme.spacing(3)
     },
     marginBottom: {
-        marginBottom: 15
+        marginBottom: theme.spacing(2)
     },
     buttonWrap: {
         whiteSpace: "nowrap"

@@ -1,7 +1,14 @@
 import React, { useState, useReducer, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
-import * as fb from "firebase/app";
+
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import StarIcon from "@material-ui/icons/Star";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
 
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
@@ -9,16 +16,19 @@ import * as reducers from "../../tools/reducer";
 import { firebase } from "../../firebase/firebaseConfig";
 import * as dbFormat from "../../tools/dbFormat";
 import { userContext } from "../../tools/reactContext";
+import { useStyles } from "./styles";
 
 //
 // component
 const ReviewInput = ({ productID, reviewsDispatch }) => {
     const [textInput, setTextInput] = useState("");
-    const [ratingInput, setRatingInput] = useState(null);
+    const [ratingInput, setRatingInput] = useState(1);
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
     const userLogged = useContext(userContext);
+
+    const classes = useStyles();
 
     // CRUD
     const create = async () => {
@@ -30,13 +40,20 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
         const userObj = {
             uid: userLogged.uid,
             email: userLogged.email,
+            photoURL: userLogged.photoURL,
             ...(userLogged.displayName && {
                 displayName: userLogged.displayName
             })
         };
 
         const newReview = dbFormat.createReview(
-            userRef,
+            ratingInput,
+            textInput,
+            userObj,
+            userRef
+        );
+
+        const newLocalReview = dbFormat.createReview(
             ratingInput,
             textInput,
             userObj
@@ -51,7 +68,7 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
                 setTextInput("");
                 setRatingInput("");
                 actionCreators.createReviewSuccess(reviewsDispatch, {
-                    ...newReview,
+                    ...newLocalReview,
                     id
                 });
             })
@@ -62,8 +79,8 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
     };
 
     // handlers
-    const handleTextInput = e => setTextInput(e.target.value);
-    const handleStarsChange = e => setRatingInput(e.target.value);
+    const handleTextChange = e => setTextInput(e.target.value);
+    const handleRatingChange = e => setRatingInput(e.target.value);
     const handleSubmit = async e => {
         e.preventDefault();
         await create();
@@ -71,45 +88,50 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <label>rating: </label>
-            <input
-                type="radio"
-                value="1"
-                checked={ratingInput === "1"}
-                onChange={handleStarsChange}
-            />
-            <input
-                type="radio"
-                value="2"
-                checked={ratingInput === "2"}
-                onChange={handleStarsChange}
-            />
-            <input
-                type="radio"
-                value="3"
-                checked={ratingInput === "3"}
-                onChange={handleStarsChange}
-            />
-            <input
-                type="radio"
-                value="4"
-                checked={ratingInput === "4"}
-                onChange={handleStarsChange}
-            />
-            <input
-                type="radio"
-                value="5"
-                checked={ratingInput === "5"}
-                onChange={handleStarsChange}
-            />
-
-            <br />
-            <label>review: </label>
-            <textarea value={textInput} onChange={handleTextInput} />
-            <br />
-            <button disabled={apiStatus ? true : false}>
-                {apiStatus ? "submiting..." : "submit"}
-            </button>
+            <Box pb={2}>
+                <StarIcon className={classes.star} />{" "}
+                <FormControl required>
+                    <Select
+                        native
+                        value={ratingInput}
+                        onChange={handleRatingChange}
+                    >
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box pb={2}>
+                <TextField
+                    multiline
+                    fullWidth
+                    required
+                    rows="4"
+                    rowsMax="8"
+                    placeholder="put your review here..."
+                    value={textInput}
+                    onChange={handleTextChange}
+                    variant="filled"
+                    className={classes.textField}
+                />
+            </Box>
+            <Box pb={3}>
+                <Button
+                    type="submit"
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    disabled={apiStatus ? true : false}
+                    disableElevation
+                    fullWidth
+                >
+                    {apiStatus ? "submiting" : "submit"}
+                </Button>
+            </Box>
+            <Divider />
         </form>
     );
 };

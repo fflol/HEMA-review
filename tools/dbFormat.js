@@ -1,11 +1,16 @@
 import * as fb from "firebase/app";
 
-export const createReview = (userRef, ratingInput, textInput, userObj) => ({
-    userRef,
+export const createReview = (ratingInput, textInput, userObj, userRef) => ({
     timeReviewed: fb.firestore.Timestamp.now(),
     rating: parseInt(ratingInput),
     text: textInput,
-    user: userObj
+    user: userObj,
+    ...(userRef && { userRef })
+});
+
+export const updateReview = (ratingInput, textInput) => ({
+    rating: parseInt(ratingInput),
+    text: textInput
 });
 
 export const createUser = (

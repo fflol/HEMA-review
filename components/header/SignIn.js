@@ -13,8 +13,6 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
-// import { makeStyles } from "@material-ui/core/styles";
-
 
 import { useStyles } from "./styles";
 import { firebase } from "../../firebase/firebaseConfig";
@@ -25,7 +23,9 @@ import * as apiUtils from "../../firebase/firebaseApiUtils";
 
 //
 // component
-const LogIn = ({ isSignInOpen, handleCloseSignIn }) => {
+const SignIn = () => {
+    const [isSignInOpen, setIsSignInOpen] = useState(false); // for mui dialog
+
     const [tabValue, setTabValue] = useState(0);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -36,6 +36,9 @@ const LogIn = ({ isSignInOpen, handleCloseSignIn }) => {
     const classes = useStyles();
 
     // handlers
+    const handleOpenSignIn = () => setIsSignInOpen(true); // for mui dialog
+    const handleCloseSignIn = () => setIsSignInOpen(false); // for mui dialog
+
     const handleEmailInput = e => setEmail(e.target.value);
     const handlePasswordInput = e => setPassword(e.target.value);
 
@@ -149,106 +152,117 @@ const LogIn = ({ isSignInOpen, handleCloseSignIn }) => {
     };
 
     return (
-        <Dialog
-            onClose={handleCloseSignIn}
-            aria-labelledby="signin-dialog"
-            open={isSignInOpen}
-        >
-            <Paper className={classes.loginDialog}>
-                <Tabs
-                    value={tabValue}
-                    onChange={handleChangeTab}
-                    aria-label="signin/up tab"
-                    className={classes.marginBottom}
-                >
-                    <Tab label="Sign in" />
-                    <Tab label="Sign up" />
-                </Tabs>
+        <>
+            <Button
+                size="small"
+                variant="text"
+                className={classes.buttonWrap}
+                onClick={handleOpenSignIn}
+            >
+                Sign in
+            </Button>
 
-                {tabValue === 0 && (
-                    <>
+            <Dialog
+                onClose={handleCloseSignIn}
+                aria-labelledby="signin-dialog"
+                open={isSignInOpen}
+            >
+                <Paper className={classes.loginDialog}>
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleChangeTab}
+                        aria-label="signin/up tab"
+                        className={classes.marginBottom}
+                    >
+                        <Tab label="Sign in" />
+                        <Tab label="Sign up" />
+                    </Tabs>
+
+                    {tabValue === 0 && (
+                        <>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSignUpWithGoogle}
+                                className={classes.marginBottom}
+                            >
+                                Sign in with Google
+                            </Button>
+                            <Divider />
+                        </>
+                    )}
+
+                    <form
+                        noValidate
+                        onSubmit={tabValue === 0 ? handleSignIn : handleSignUp}
+                    >
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={handleEmailInput}
+                            value={email}
+                            disabled={apiStatus ? true : false}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            onChange={handlePasswordInput}
+                            value={password}
+                            disabled={apiStatus ? true : false}
+                            autoComplete="current-password"
+                        />
                         <Button
+                            type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            onClick={handleSignUpWithGoogle}
-                            className={classes.marginBottom}
+                            disabled={apiStatus ? true : false}
                         >
-                            Sign in with Google
+                            {apiStatus ? "submitting" : "Sign In"}
                         </Button>
-                        <Divider />
-                    </>
-                )}
 
-                <form
-                    noValidate
-                    onSubmit={tabValue === 0 ? handleSignIn : handleSignUp}
-                >
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        onChange={handleEmailInput}
-                        value={email}
-                        disabled={apiStatus ? true : false}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        onChange={handlePasswordInput}
-                        value={password}
-                        disabled={apiStatus ? true : false}
-                        autoComplete="current-password"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={apiStatus ? true : false}
-                    >
-                        {apiStatus ? "submitting" : "Sign In"}
-                    </Button>
-
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                {tabValue === 0 ? "Forgot password?" : " "}
-                            </Link>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    {tabValue === 0 ? "Forgot password?" : " "}
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link
+                                    href="#"
+                                    variant="body2"
+                                    onClick={handleToogleSignUp}
+                                >
+                                    {tabValue === 0
+                                        ? "Don't have an account? Sign Up"
+                                        : "Already have an account? Sign In"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link
-                                href="#"
-                                variant="body2"
-                                onClick={handleToogleSignUp}
-                            >
-                                {tabValue === 0
-                                    ? "Don't have an account? Sign Up"
-                                    : "Already have an account? Sign In"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Paper>
-        </Dialog>
+                    </form>
+                </Paper>
+            </Dialog>
+        </>
     );
 };
 
-LogIn.propTypes = {
-    isSignInOpen: PropTypes.bool.isRequired,
-    handleCloseSignIn: PropTypes.func.isRequired
-};
+// SignIn.propTypes = {
+//     isSignInOpen: PropTypes.bool.isRequired,
+//     handleCloseSignIn: PropTypes.func.isRequired
+// };
 
-export default LogIn;
+export default SignIn;

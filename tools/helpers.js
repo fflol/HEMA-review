@@ -7,32 +7,16 @@ export const findHighRated = products =>
         .sort((a, b) => a.ratingAverage < b.ratingAverage)
         .slice(0, postsNum);
 
-// find recent reviewed products based on review.timeReviewed
-export const findRecentReviewed = (products, reviews) => {
-    if (products.length < 1) return;
-    return (
-        reviews
-            // sort the reviews by time reviwed descending (timestamp)
-            .sort((a, b) => {
-                if (a.timeReviewed < b.timeReviewed) return 1;
-                if (a.timeReviewed > b.timeReviewed) return -1;
-                return 0;
-            })
-            // remove duplicates
-            .filter(
-                (review, index, self) =>
-                    index ===
-                    self.findIndex(
-                        review2 => review.productID === review2.productID
-                    )
-            )
-            .slice(0, products.length < postsNum ? products.length : postsNum)
-            .map(review =>
-                products.find(product => product.id === review.productID)
-            )
-    );
-    // .filter(el => el);
-};
+// find recent reviewed products
+export const findRecentReviewed = products =>
+    products
+        // sort the products by lastReview descending (timestamp)
+        .sort((a, b) => {
+            if (a.lastReview < b.lastReview) return 1;
+            if (a.lastReview > b.lastReview) return -1;
+            return 0;
+        })
+        .slice(0, postsNum);
 
 // find reviews for a particular product
 export const findReviewsForThisProd = (reviewsTotal, productID) =>

@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "firebase/auth";
 
+import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
 
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
@@ -16,6 +18,19 @@ import * as dbFormat from "../tools/dbFormat";
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../styles/theme";
+
+// style
+const styles = theme => ({
+    bodyWrapper: {
+        backgroundColor: theme.palette.grey[200]
+    },
+    main: {
+        [theme.breakpoints.down("xs")]: {
+            paddingLeft: 0,
+            paddingRight: 0
+        }
+    }
+});
 
 class MyApp extends App {
     constructor(props) {
@@ -65,7 +80,7 @@ class MyApp extends App {
     }
 
     render() {
-        const { Component, pageProps } = this.props;
+        const { Component, pageProps, classes } = this.props;
 
         return (
             <>
@@ -85,9 +100,17 @@ class MyApp extends App {
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
                     <userContext.Provider value={this.state.user}>
-                        <Header />
-                        <Component {...pageProps} />
-                        <Footer />
+                        <div className={classes.bodyWrapper}>
+                            <Header />
+                            <Container
+                                component="main"
+                                maxWidth="md"
+                                className={classes.main}
+                            >
+                                <Component {...pageProps} />
+                            </Container>
+                            <Footer />
+                        </div>
                     </userContext.Provider>
                 </ThemeProvider>
             </>
@@ -95,4 +118,4 @@ class MyApp extends App {
     }
 }
 
-export default MyApp;
+export default withStyles(styles)(MyApp);
