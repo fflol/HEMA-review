@@ -16,8 +16,8 @@ const Index = ({ products }) => {
     const [tabValue, setTabValue] = useState(0);
 
     // vars
-    const highestRatedProd = helpers.findHighRated(products);
-    const recentReviewed = helpers.findRecentReviewed(products);
+    const highestRatedProducts = helpers.findHighRated(products);
+    const recentReviewedProducts = helpers.findRecentReviewed(products);
 
     // handlers
     const handleTabChange = (event, newValue) => setTabValue(newValue);
@@ -36,7 +36,9 @@ const Index = ({ products }) => {
                 <Box p={1} mb={1}>
                     <ProdList
                         products={
-                            tabValue === 0 ? highestRatedProd : recentReviewed
+                            tabValue === 0
+                                ? highestRatedProducts
+                                : recentReviewedProducts
                         }
                     />
                 </Box>

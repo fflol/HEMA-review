@@ -8,6 +8,7 @@ import "firebase/auth";
 import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
 
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
@@ -22,9 +23,14 @@ import theme from "../styles/theme";
 // style
 const styles = theme => ({
     bodyWrapper: {
-        backgroundColor: theme.palette.grey[200]
+        backgroundColor: theme.palette.grey[200],
+        minHeight: "100vh"
+    },
+    gridItemGrow: {
+        flexGrow: 1
     },
     main: {
+        flexGrow: 1,
         [theme.breakpoints.down("xs")]: {
             paddingLeft: 0,
             paddingRight: 0
@@ -100,17 +106,31 @@ class MyApp extends App {
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
                     <userContext.Provider value={this.state.user}>
-                        <div className={classes.bodyWrapper}>
-                            <Header />
-                            <Container
-                                component="main"
-                                maxWidth="md"
-                                className={classes.main}
+                        <Grid
+                            container
+                            direction="column"
+                            className={classes.bodyWrapper}
+                        >
+                            <Grid item>
+                                <Header />
+                            </Grid>
+                            <Grid
+                                item
+                                container
+                                className={classes.gridItemGrow}
                             >
-                                <Component {...pageProps} />
-                            </Container>
-                            <Footer />
-                        </div>
+                                <Container
+                                    component="main"
+                                    maxWidth="md"
+                                    className={classes.main}
+                                >
+                                    <Component {...pageProps} />
+                                </Container>
+                            </Grid>
+                            <Grid item>
+                                <Footer />
+                            </Grid>
+                        </Grid>
                     </userContext.Provider>
                 </ThemeProvider>
             </>

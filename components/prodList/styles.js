@@ -8,5 +8,11 @@ export const useStyles = makeStyles(theme => ({
     },
     inline: {
         display: "inline"
+    },
+    star: {
+        fontSize: "1rem",
+        position: "relative",
+        top: "2px",
+        color: theme.palette.star.default
     }
 }));

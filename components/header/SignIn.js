@@ -260,9 +260,4 @@ const SignIn = () => {
     );
 };
 
-// SignIn.propTypes = {
-//     isSignInOpen: PropTypes.bool.isRequired,
-//     handleCloseSignIn: PropTypes.func.isRequired
-// };
-
 export default SignIn;

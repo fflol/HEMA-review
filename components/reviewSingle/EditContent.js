@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import StarIcon from "@material-ui/icons/Star";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,9 +12,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
+import StarIcon from "@material-ui/icons/Star";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ClearIcon from "@material-ui/icons/Clear";
 
 import { useStyles } from "./styles";

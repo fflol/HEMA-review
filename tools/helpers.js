@@ -4,7 +4,15 @@ const postsNum = 6;
 // find the highest rated from db product
 export const findHighRated = products =>
     products
-        .sort((a, b) => a.ratingAverage < b.ratingAverage)
+        .sort((a, b) => {
+            if (a.ratingAverage < b.ratingAverage) return 1;
+            if (a.ratingAverage > b.ratingAverage) return -1;
+            if (a.ratingAverage === b.ratingAverage) {
+                if (a.lastReview.seconds < b.lastReview.seconds) return 1;
+                if (a.lastReview.seconds > b.lastReview.seconds) return -1;
+            }
+            return 0;
+        })
         .slice(0, postsNum);
 
 // find recent reviewed products
@@ -12,8 +20,8 @@ export const findRecentReviewed = products =>
     products
         // sort the products by lastReview descending (timestamp)
         .sort((a, b) => {
-            if (a.lastReview < b.lastReview) return 1;
-            if (a.lastReview > b.lastReview) return -1;
+            if (a.lastReview.seconds < b.lastReview.seconds) return 1;
+            if (a.lastReview.seconds > b.lastReview.seconds) return -1;
             return 0;
         })
         .slice(0, postsNum);

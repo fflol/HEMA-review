@@ -9,6 +9,7 @@ export const createReview = (ratingInput, textInput, userObj, userRef) => ({
 });
 
 export const updateReview = (ratingInput, textInput) => ({
+    timeReviewed: fb.firestore.Timestamp.now(),
     rating: parseInt(ratingInput),
     text: textInput
 });

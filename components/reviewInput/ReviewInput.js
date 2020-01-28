@@ -136,6 +136,9 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
     );
 };
 
-ReviewInput.propTypes = {};
+ReviewInput.propTypes = {
+    productID: PropTypes.string.isRequired,
+    reviewsDispatch: PropTypes.func.isRequired
+};
 
 export default ReviewInput;

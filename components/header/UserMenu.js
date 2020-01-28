@@ -16,11 +16,11 @@ import * as apiUtiles from "../../firebase/firebaseApiUtils";
 //
 // component
 const UserMenu = ({ userLogged }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null); //dropdown menu state
     const classes = useStyles();
 
     // vars
-    const menuID = "header-dropdown";
+    const menuID = "user-dropdown";
     const isMenuOpen = Boolean(anchorEl);
 
     // handlers
