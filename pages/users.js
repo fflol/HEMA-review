@@ -32,7 +32,7 @@ Users.getInitialProps = async () => {
 };
 
 Users.propTypes = {
-    // db: PropTypes.object.isRequired
+    users: PropTypes.array.isRequired
 };
 
 export default Users;

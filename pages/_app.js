@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import App from "next/app";
-import Head from "next/head";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "firebase/auth";
@@ -19,34 +18,15 @@ import * as dbFormat from "../tools/dbFormat";
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../styles/theme";
+import { useStyles } from "../styles/styles";
 
-// style
-const styles = theme => ({
-    bodyWrapper: {
-        backgroundColor: theme.palette.grey[200],
-        minHeight: "100vh"
-    },
-    gridItemGrow: {
-        flexGrow: 1
-    },
-    main: {
-        flexGrow: 1,
-        [theme.breakpoints.down("xs")]: {
-            paddingLeft: 0,
-            paddingRight: 0
-        }
-    }
-});
+const MyApp = ({ Component, pageProps }) => {
+    const [user, setUser] = useState({});
+    const [products, setProducts] = useState([]);
 
-class MyApp extends App {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {}
-        };
-    }
+    const classes = useStyles();
 
-    componentDidMount() {
+    useEffect(() => {
         toast.configure({
             autoClose: 1000,
             hideProgressBar: true,
@@ -55,7 +35,7 @@ class MyApp extends App {
             pauseOnHover: true
         });
         // listening auth lifecycle, set user info
-        this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 const {
                     displayName,
@@ -64,78 +44,56 @@ class MyApp extends App {
                     emailVerified,
                     uid
                 } = user; // get properties from Firebase user obj
-                this.setState({
-                    user: {
-                        uid,
-                        ...dbFormat.createUser(
-                            displayName,
-                            email,
-                            photoURL,
-                            emailVerified
-                        )
-                    }
+                setUser({
+                    uid,
+                    ...dbFormat.createUser(
+                        displayName,
+                        email,
+                        photoURL,
+                        emailVerified
+                    )
                 });
             } else {
-                this.setState({ user: {} });
+                setUser({});
             }
         });
-    }
 
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
+        return () => unsubscribe();
+    }, []);
 
-    render() {
-        const { Component, pageProps, classes } = this.props;
-
-        return (
-            <>
-                <Head>
-                    <title>HEMA Gear reviews</title>
-                    <link
-                        rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-                        key="google-font-roboto"
-                    />
-                    <link
-                        rel="stylesheet"
-                        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-                        key="google-font-icon"
-                    />
-                </Head>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <userContext.Provider value={this.state.user}>
-                        <Grid
-                            container
-                            direction="column"
-                            className={classes.bodyWrapper}
-                        >
-                            <Grid item>
-                                <Header />
-                            </Grid>
-                            <Grid
-                                item
-                                container
-                                className={classes.gridItemGrow}
-                            >
-                                <Container
-                                    component="main"
-                                    maxWidth="md"
-                                    className={classes.main}
-                                >
-                                    <Component {...pageProps} />
-                                </Container>
-                            </Grid>
-                            <Grid item>
-                                <Footer />
-                            </Grid>
+    return (
+        <>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <userContext.Provider value={user}>
+                    <Grid
+                        container
+                        direction="column"
+                        className={classes.bodyWrapper}
+                    >
+                        <Grid item>
+                            <Header products={products} />
                         </Grid>
-                    </userContext.Provider>
-                </ThemeProvider>
-            </>
-        );
-    }
-}
+                        <Grid item container className={classes.gridItemGrow}>
+                            <Container
+                                component="main"
+                                maxWidth="md"
+                                className={classes.main}
+                            >
+                                <Component
+                                    setAppProducts={setProducts}
+                                    {...pageProps}
+                                />
+                            </Container>
+                        </Grid>
+                        <Grid item>
+                            <Footer />
+                        </Grid>
+                    </Grid>
+                </userContext.Provider>
+            </ThemeProvider>
+        </>
+    );
+};
 
-export default withStyles(styles)(MyApp);
+export default MyApp;

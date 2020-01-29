@@ -1,5 +1,13 @@
 import { createContext } from "react";
 
-const context = {};
+//
+// user
+const userInitial = {};
 
-export const userContext = createContext(context);
+export const userContext = createContext(userInitial);
+
+//
+// products
+const productsInitial = [];
+
+export const productsContext = createContext(productsInitial);

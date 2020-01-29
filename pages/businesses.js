@@ -31,7 +31,7 @@ Businesses.getInitialProps = async () => {
 };
 
 Businesses.propTypes = {
-    // db: PropTypes.object.isRequired
+    businesses: PropTypes.array.isRequired
 };
 
 export default Businesses;

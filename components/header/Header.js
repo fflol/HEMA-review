@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import PropTypes from "prop-types";
 import Link from "next/link";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -10,7 +11,7 @@ import Search from "../search/Search";
 import UserMenu from "./UserMenu";
 import SignIn from "./SignIn";
 
-const Header = () => {
+const Header = ({ products }) => {
     const userLogged = useContext(userContext);
 
     const classes = useStyles();
@@ -21,7 +22,7 @@ const Header = () => {
                 <Link href="/">
                     <a>Home</a>
                 </Link>
-                <Search />
+                <Search products={products} />
                 <div className={classes.grow} />
                 {!userLogged.email ? ( //check if user is logged in
                     <SignIn />
@@ -31,6 +32,10 @@ const Header = () => {
             </Toolbar>
         </AppBar>
     );
+};
+
+Header.propTypes = {
+    products: PropTypes.array.isRequired
 };
 
 export default Header;

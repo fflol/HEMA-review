@@ -38,6 +38,7 @@ export const findReviewsForThisProd = (reviewsTotal, productID) =>
 
 // search func
 export const search = (products, input) => {
+    if (!input) return [];
     return products.filter(product =>
         product.name.toLowerCase().includes(input.toLowerCase())
     );

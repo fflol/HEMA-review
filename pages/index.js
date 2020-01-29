@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import Paper from "@material-ui/core/Paper";
@@ -12,8 +12,10 @@ import * as apiUtils from "../firebase/firebaseApiUtils";
 
 //
 // component
-const Index = ({ products }) => {
+const Index = ({ products, setAppProducts }) => {
     const [tabValue, setTabValue] = useState(0);
+
+    useEffect(() => setAppProducts(products), []);
 
     // vars
     const highestRatedProducts = helpers.findHighRated(products);
@@ -53,7 +55,8 @@ Index.getInitialProps = async () => {
 };
 
 Index.propTypes = {
-    products: PropTypes.array.isRequired
+    products: PropTypes.array.isRequired,
+    setAppProducts: PropTypes.func.isRequired
 };
 
 export default Index;
