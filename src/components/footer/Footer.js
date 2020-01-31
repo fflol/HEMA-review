@@ -1,9 +1,10 @@
 import React from "react";
+import Link from "next/link";
 // import PropTypes from "prop-types";
 
-import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import MuiLink from "@material-ui/core/Link";
 
 import { useStyles } from "./styles";
 
@@ -11,20 +12,22 @@ const Footer = () => {
     const classes = useStyles();
 
     return (
-        <footer className={classes.footer}>
+        <Container component="footer" maxWidth="md" className={classes.footer}>
             <Typography variant="caption">
-                <Link href="/about">About</Link>
+                <Link href="/about">
+                    <a>About</a>
+                </Link>
             </Typography>
             <br />
             <Typography variant="caption" color="textSecondary">
                 {"Copyright © "}
-                <Link color="inherit" href="">
+                <MuiLink color="inherit" href="">
                     HEMA Gear Reviews
-                </Link>{" "}
+                </MuiLink>{" "}
                 {new Date().getFullYear()}
                 {"."}
             </Typography>
-        </footer>
+        </Container>
     );
 };
 

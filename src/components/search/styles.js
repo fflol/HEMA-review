@@ -2,6 +2,9 @@ import { fade } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles(theme => ({
+    grow: {
+        flexGrow: 1
+    },
     title: {
         display: "none",
         [theme.breakpoints.up("sm")]: {

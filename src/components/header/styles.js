@@ -73,5 +73,8 @@ export const useStyles = makeStyles(theme => ({
     },
     buttonWrap: {
         whiteSpace: "nowrap"
+    },
+    menuPaper: {
+        padding: theme.spacing(1)
     }
 }));

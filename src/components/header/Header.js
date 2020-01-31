@@ -20,8 +20,11 @@ const Header = ({ products }) => {
         <AppBar position="static">
             <Toolbar>
                 <Link href="/">
-                    <a>Home</a>
+                    <a>
+                        <img src="/logo.png" alt="logo" />
+                    </a>
                 </Link>
+                <div className={classes.grow} />
                 <Search products={products} />
                 <div className={classes.grow} />
                 {!userLogged.email ? ( //check if user is logged in

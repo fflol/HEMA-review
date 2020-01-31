@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import App from "next/app";
+import Head from "next/head";
+import Router from "next/router";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "firebase/auth";
 
-import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -20,6 +23,13 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../styles/theme";
 import { useStyles } from "../styles/styles";
 
+// spinner
+Router.events.on("routeChangeStart", () => NProgress.start());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
+
+//
+// component
 const MyApp = ({ Component, pageProps }) => {
     const [user, setUser] = useState({});
     const [products, setProducts] = useState([]);
@@ -63,6 +73,10 @@ const MyApp = ({ Component, pageProps }) => {
 
     return (
         <>
+            <Head>
+                <title>HEMA Gear reviews</title>
+                {/* <link rel="stylesheet" type="text/css" href="/nprogress.css" /> */}
+            </Head>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <userContext.Provider value={user}>
@@ -71,9 +85,7 @@ const MyApp = ({ Component, pageProps }) => {
                         direction="column"
                         className={classes.bodyWrapper}
                     >
-                        <Grid item>
-                            <Header products={products} />
-                        </Grid>
+                        <Header products={products} />
                         <Grid item container className={classes.gridItemGrow}>
                             <Container
                                 component="main"
@@ -86,9 +98,7 @@ const MyApp = ({ Component, pageProps }) => {
                                 />
                             </Container>
                         </Grid>
-                        <Grid item>
-                            <Footer />
-                        </Grid>
+                        <Footer />
                     </Grid>
                 </userContext.Provider>
             </ThemeProvider>

@@ -58,8 +58,8 @@ const UserMenu = ({ userLogged }) => {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
             >
-                <Paper square>
-                    <Typography variant="button" display="block" align="center">
+                <Paper square className={classes.menuPaper}>
+                    <Typography variant="button" component="p" align="center">
                         {userLogged.displayName}
                     </Typography>
                     <Typography

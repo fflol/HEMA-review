@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
+import NProgress from "nprogress";
 
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -22,8 +23,8 @@ const Search = ({ products }) => {
     const classes = useStyles();
 
     // vars
+    const isMenuOpen = Boolean(searchResult.length);
     const popperID = "search-auto-complete";
-    const isMenuOpen = Boolean(searchResult);
 
     // handlers
     const handleChange = e => setInput(e.target.value);
@@ -33,7 +34,7 @@ const Search = ({ products }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={classes.grow}>
             <div ref={containerRef} className={classes.search}>
                 <div className={classes.searchIcon}>
                     <SearchIcon />
