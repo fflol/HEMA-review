@@ -1,10 +1,8 @@
 require("dotenv").config();
 
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true"
+});
 const withCSS = require("@zeit/next-css");
 
-module.exports = withCSS({
-    env: {
-        DEV_URL: "http://localhost:4000"
-        // DEV_URL: process.env.DEV_URL
-    }
-});
+module.exports = withCSS(withBundleAnalyzer({}));

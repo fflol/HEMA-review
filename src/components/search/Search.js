@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import NProgress from "nprogress";
 
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -28,6 +27,7 @@ const Search = ({ products }) => {
 
     // handlers
     const handleChange = e => setInput(e.target.value);
+    const handleClose = () => setInput("");
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -61,6 +61,7 @@ const Search = ({ products }) => {
                         <Paper
                             key={prod.id}
                             square
+                            onClick={handleClose}
                             className={classes.popperPaper}
                         >
                             <Typography variant="subtitle1">
