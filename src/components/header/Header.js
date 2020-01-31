@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
@@ -20,8 +20,17 @@ const Header = ({ products }) => {
         <AppBar position="static">
             <Toolbar>
                 <Link href="/">
-                    <a>
-                        <img src="/logo.png" alt="logo" />
+                    <a className={classes.logoContainer}>
+                        <img
+                            src="/logo-icon.png"
+                            alt="logo-icon"
+                            className={classes.logo}
+                        />
+                        <img
+                            src="/logo-text.png"
+                            alt="logo-text"
+                            className={`${classes.logo} ${classes.logoText}`}
+                        />
                     </a>
                 </Link>
                 <div className={classes.grow} />

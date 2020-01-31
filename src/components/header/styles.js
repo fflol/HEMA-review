@@ -2,6 +2,21 @@ import { fade } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles(theme => ({
+    logoContainer: {
+        whiteSpace: "nowrap"
+    },
+    logo: {
+        height: 30,
+        paddingRight: theme.spacing(1),
+        position: "relative",
+        top: 3
+    },
+    logoText: {
+        paddingRight: theme.spacing(2),
+        [theme.breakpoints.down("xs")]: {
+            display: "none"
+        }
+    },
     grow: {
         flexGrow: 1
     },
