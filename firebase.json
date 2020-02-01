@@ -4,7 +4,13 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist/public",
+    "rewrites": [
+      {
+        "source": "**/**",
+        "function": "next"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -13,6 +19,9 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "functions": {
+    "source": "dist/functions"
   },
   "emulators": {
     "functions": {

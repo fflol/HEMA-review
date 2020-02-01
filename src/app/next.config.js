@@ -5,4 +5,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 const withCSS = require("@zeit/next-css");
 
-module.exports = withCSS(withBundleAnalyzer({}));
+module.exports = withCSS(
+    withBundleAnalyzer({ distDir: "../../dist/functions/next" })
+);
