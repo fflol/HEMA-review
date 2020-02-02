@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
@@ -105,6 +106,11 @@ const MyApp = ({ Component, pageProps }) => {
             </ThemeProvider>
         </>
     );
+};
+
+MyApp.propTypes = {
+    component: PropTypes.func,
+    pageProps: PropTypes.shape({}).isRequired
 };
 
 export default MyApp;

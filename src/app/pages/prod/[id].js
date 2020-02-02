@@ -105,8 +105,29 @@ Prod.getInitialProps = async ({ query }) => {
 };
 
 Prod.propTypes = {
-    prod: PropTypes.object.isRequired,
-    reviewsReceived: PropTypes.array.isRequired
+    prod: PropTypes.shape({
+        business: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired
+        }).isRequired,
+        lastReview: PropTypes.shape({}).isRequired,
+        name: PropTypes.string.isRequired,
+        ratingAverage: PropTypes.number.isRequired,
+        reviewsTotal: PropTypes.number.isRequired
+    }).isRequired,
+    reviewsReceived: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            rating: PropTypes.number.isRequired,
+            text: PropTypes.string.isRequired,
+            timeReviewed: PropTypes.shape({}).isRequired,
+            user: PropTypes.shape({
+                email: PropTypes.string.isRequired,
+                photoURL: PropTypes.string,
+                uid: PropTypes.string.isRequired
+            }).isRequired
+        })
+    ).isRequired
 };
 
 export default Prod;

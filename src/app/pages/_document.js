@@ -4,6 +4,7 @@ import { ServerStyleSheets } from "@material-ui/core/styles";
 
 import theme from "../styles/theme";
 
+// this component is for MUI useStyle to work. if not, no need to set this
 export default class MyDocument extends Document {
     render() {
         return (

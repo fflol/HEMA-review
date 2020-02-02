@@ -22,6 +22,15 @@ Prod.getInitialProps = async ({ query }) => {
     };
 };
 
-Prod.propTypes = {};
+Prod.propTypes = {
+    business: PropTypes.shape({
+        address: PropTypes.string,
+        email: PropTypes.string.isRequired,
+        email2: PropTypes.string,
+        id: PropTypes.string,
+        name: PropTypes.string.isRequired,
+        phone: PropTypes.string
+    }).isRequired
+};
 
 export default Prod;

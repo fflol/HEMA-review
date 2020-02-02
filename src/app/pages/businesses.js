@@ -31,7 +31,16 @@ Businesses.getInitialProps = async () => {
 };
 
 Businesses.propTypes = {
-    businesses: PropTypes.array.isRequired
+    businesses: PropTypes.arrayOf(
+        PropTypes.shape({
+            address: PropTypes.string,
+            email: PropTypes.string,
+            email2: PropTypes.string,
+            id: PropTypes.string,
+            name: PropTypes.string,
+            phone: PropTypes.string
+        })
+    ).isRequired
 };
 
 export default Businesses;

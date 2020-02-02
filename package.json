@@ -1,6 +1,6 @@
 {
     "name": "191214-review-app",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "description": "HEMA gears review app",
     "engines": {
         "node": "8"

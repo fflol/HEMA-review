@@ -32,7 +32,16 @@ Users.getInitialProps = async () => {
 };
 
 Users.propTypes = {
-    users: PropTypes.array.isRequired
+    users: PropTypes.arrayOf(
+        PropTypes.shape({
+            displayName: PropTypes.string,
+            email: PropTypes.string.isRequired,
+            emailVerified: PropTypes.bool.isRequired,
+            photoURL: PropTypes.string,
+            provider: PropTypes.string.isRequired,
+            reviews: PropTypes.number.isRequired
+        })
+    ).isRequired
 };
 
 export default Users;

@@ -97,6 +97,15 @@ User.getInitialProps = async ({ query }) => {
     };
 };
 
-User.propTypes = {};
+User.propTypes = {
+    user: PropTypes.shape({
+        displayName: PropTypes.string,
+        email: PropTypes.string.isRequired,
+        emailVerified: PropTypes.bool.isRequired,
+        photoURL: PropTypes.string,
+        provider: PropTypes.string.isRequired,
+        reviews: PropTypes.number.isRequired
+    }).isRequired
+};
 
 export default User;

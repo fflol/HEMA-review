@@ -55,7 +55,18 @@ Index.getInitialProps = async () => {
 };
 
 Index.propTypes = {
-    products: PropTypes.array.isRequired,
+    products: PropTypes.arrayOf(
+        PropTypes.shape({
+            business: PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired
+            }).isRequired,
+            lastReview: PropTypes.shape({}).isRequired,
+            name: PropTypes.string.isRequired,
+            ratingAverage: PropTypes.number.isRequired,
+            reviewsTotal: PropTypes.number.isRequired
+        })
+    ).isRequired,
     setAppProducts: PropTypes.func.isRequired
 };
 
