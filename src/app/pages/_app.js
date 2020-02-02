@@ -52,7 +52,8 @@ const MyApp = ({ Component, pageProps }) => {
                     email,
                     photoURL,
                     emailVerified,
-                    uid
+                    uid,
+                    providerId
                 } = user; // get properties from Firebase user obj
                 setUser({
                     uid,
@@ -60,7 +61,8 @@ const MyApp = ({ Component, pageProps }) => {
                         displayName,
                         email,
                         photoURL,
-                        emailVerified
+                        emailVerified,
+                        providerId
                     )
                 });
             } else {
@@ -75,7 +77,6 @@ const MyApp = ({ Component, pageProps }) => {
         <>
             <Head>
                 <title>HEMA Gear reviews</title>
-                {/* <link rel="stylesheet" type="text/css" href="/nprogress.css" /> */}
             </Head>
             <ThemeProvider theme={theme}>
                 <CssBaseline />

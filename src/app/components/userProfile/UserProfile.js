@@ -54,6 +54,8 @@ const UserProfile = ({
         }
     };
 
+    const buttonText = apiStatus ? "submitting" : "submit edit";
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
@@ -69,13 +71,25 @@ const UserProfile = ({
             <div>
                 <p>photo: {user.photoURL}</p>
             </div>
-            <button type="submit" disabled={apiStatus ? true : false}>
-                {apiStatus ? "submitting" : "submit edit"}
+            <button type="submit" disabled={apiStatus}>
+                {buttonText}
             </button>
         </form>
     );
 };
 
-UserProfile.propTypes = {};
+UserProfile.propTypes = {
+    user: PropTypes.shape({
+        uid: PropTypes.string.isRequired,
+        displayName: PropTypes.string,
+        email: PropTypes.string.isRequired,
+        photoURL: PropTypes.string,
+        emailVerified: PropTypes.bool.isRequired,
+        provider: PropTypes.string.isRequired
+    }).isRequired,
+    nameInput: PropTypes.string.isRequired,
+    setNameInput: PropTypes.func.isRequired,
+    setIsEditingProfile: PropTypes.func.isRequired
+};
 
 export default UserProfile;
