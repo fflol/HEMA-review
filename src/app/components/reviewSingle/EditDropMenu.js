@@ -11,7 +11,7 @@ import { useStyles } from "./styles";
 
 const EditDropMenu = ({ handleEditOpen, handleDelete }) => {
     const [anchorEl, setAnchorEl] = useState(null);
-    // const classes = useStyles();
+    const classes = useStyles();
 
     // vars
     const menuID = "edit-dropdown";
@@ -23,7 +23,11 @@ const EditDropMenu = ({ handleEditOpen, handleDelete }) => {
 
     return (
         <>
-            <IconButton onClick={handleMenuOpen} size="small">
+            <IconButton
+                onClick={handleMenuOpen}
+                size="small"
+                className={classes.editDropButton}
+            >
                 <ExpandMoreIcon />
             </IconButton>
             <Menu

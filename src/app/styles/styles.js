@@ -17,5 +17,10 @@ export const useStyles = makeStyles(theme => ({
     },
     prodSignInText: {
         color: theme.palette.primary.main
+    },
+    prodRatingText: {
+        position: "relative",
+        left: theme.spacing(1),
+        top: -3
     }
 }));

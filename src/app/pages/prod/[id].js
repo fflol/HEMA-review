@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
+import Rating from "@material-ui/lab/Rating";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
@@ -39,16 +40,27 @@ const Prod = ({ prod, reviewsReceived }) => {
         );
     }, [reviews]); // re-checks every time when reviews updates
 
+    //var
+
     return (
         <>
             <Paper square>
                 <Box p={1} mb={1}>
                     <Typography variant="h4">{prod.name}</Typography>
-                    <Typography variant="subtitle1">
-                        reviews: {prod.reviewsTotal}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        rating: {prod.ratingAverage}
+                    <Rating
+                        name="average-rating"
+                        precision={0.5}
+                        value={prod.ratingAverage}
+                        size="small"
+                        readOnly
+                    />
+                    <Typography
+                        variant="subtitle1"
+                        display="inline"
+                        color="textSecondary"
+                        className={classes.prodRatingText}
+                    >
+                        {prod.reviewsTotal} reviews
                     </Typography>
                     <Typography variant="subtitle1">
                         from:{" "}
@@ -122,6 +134,7 @@ Prod.propTypes = {
             text: PropTypes.string.isRequired,
             timeReviewed: PropTypes.shape({}).isRequired,
             user: PropTypes.shape({
+                displayName: PropTypes.string,
                 email: PropTypes.string.isRequired,
                 photoURL: PropTypes.string,
                 uid: PropTypes.string.isRequired

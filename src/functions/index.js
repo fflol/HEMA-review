@@ -71,7 +71,7 @@ exports.calculateRatingAverage = functions.firestore
         ) {
             // round num up function
             const roundNumUp = (num, increment) =>
-                Math.ceil(num / increment) * increment;
+                Math.round(num / increment) * increment;
 
             let ratingCollection = [];
             await db

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import StarIcon from "@material-ui/icons/Star";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -9,6 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Rating from "@material-ui/lab/Rating";
 
 import { useStyles } from "./styles";
 import EditDropMenu from "./EditDropMenu";
@@ -65,8 +65,13 @@ const DisplayContent = ({
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <div className={classes.rating}>
-                                <StarIcon className={classes.star} /> {rating}
+                            <div>
+                                <Rating
+                                    name="rating"
+                                    value={rating}
+                                    size="small"
+                                    readOnly
+                                />
                             </div>
                             {isOwnReview && (
                                 <EditDropMenu
@@ -88,7 +93,18 @@ const DisplayContent = ({
 };
 
 DisplayContent.propTypes = {
-    review: PropTypes.object.isRequired,
+    review: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        rating: PropTypes.number.isRequired,
+        text: PropTypes.string.isRequired,
+        timeReviewed: PropTypes.shape({}).isRequired,
+        user: PropTypes.shape({
+            displayName: PropTypes.string,
+            email: PropTypes.string.isRequired,
+            photoURL: PropTypes.string,
+            uid: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired,
     timeReviewed: PropTypes.string.isRequired,
     isOwnReview: PropTypes.bool,
     handleEditOpen: PropTypes.func.isRequired,

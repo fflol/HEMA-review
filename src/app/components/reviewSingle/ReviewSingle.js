@@ -107,7 +107,18 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
 
 ReviewSingle.propTypes = {
     productID: PropTypes.string.isRequired,
-    review: PropTypes.object.isRequired,
+    review: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        rating: PropTypes.number.isRequired,
+        text: PropTypes.string.isRequired,
+        timeReviewed: PropTypes.shape({}).isRequired,
+        user: PropTypes.shape({
+            displayName: PropTypes.string,
+            email: PropTypes.string.isRequired,
+            photoURL: PropTypes.string,
+            uid: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired,
     reviewsDispatch: PropTypes.func.isRequired
 };
 

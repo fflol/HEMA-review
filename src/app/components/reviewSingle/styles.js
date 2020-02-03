@@ -36,5 +36,8 @@ export const useStyles = makeStyles(theme => ({
     accountCircleIcon: {
         width: 40,
         height: 40
+    },
+    editDropButton: {
+        left: 83
     }
 }));

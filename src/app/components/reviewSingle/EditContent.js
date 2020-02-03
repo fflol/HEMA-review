@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -14,11 +12,20 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import StarIcon from "@material-ui/icons/Star";
+import Box from "@material-ui/core/Box";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ClearIcon from "@material-ui/icons/Clear";
+import Rating from "@material-ui/lab/Rating";
 
 import { useStyles } from "./styles";
+
+const labels = {
+    1: "Useless",
+    2: "Poor",
+    3: "Ok",
+    4: "Good",
+    5: "Excellent"
+};
 
 //
 // component
@@ -33,6 +40,8 @@ const EditContent = ({
     handleSubmitEdit,
     handleCancel
 }) => {
+    const [hoverValue, setHoverValue] = useState(-1);
+
     const classes = useStyles();
 
     return (
@@ -90,22 +99,26 @@ const EditContent = ({
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <div>
-                                    <StarIcon className={classes.star} />{" "}
-                                    <FormControl required>
-                                        <Select
-                                            native
-                                            value={ratingInput}
-                                            onChange={handleRatingChange}
-                                        >
-                                            <option value={1}>1</option>
-                                            <option value={2}>2</option>
-                                            <option value={3}>3</option>
-                                            <option value={4}>4</option>
-                                            <option value={5}>5</option>
-                                        </Select>
-                                    </FormControl>
-                                </div>
+                                <Rating
+                                    name="edit-rating"
+                                    size="small"
+                                    value={ratingInput}
+                                    onChange={handleRatingChange}
+                                    onChangeActive={(event, newHover) => {
+                                        setHoverValue(newHover);
+                                    }}
+                                />
+                                {ratingInput !== null && (
+                                    <Box ml={2}>
+                                        {
+                                            labels[
+                                                hoverValue !== -1
+                                                    ? hoverValue
+                                                    : ratingInput
+                                            ]
+                                        }
+                                    </Box>
+                                )}
                             </Grid>
                         </Grid>
                     </Card>
@@ -142,7 +155,12 @@ const EditContent = ({
 };
 
 EditContent.propTypes = {
-    author: PropTypes.object.isRequired,
+    author: PropTypes.shape({
+        displayName: PropTypes.string,
+        email: PropTypes.string.isRequired,
+        photoURL: PropTypes.string,
+        uid: PropTypes.string.isRequired
+    }).isRequired,
     timeReviewed: PropTypes.string.isRequired,
     apiStatus: PropTypes.number.isRequired,
     ratingInput: PropTypes.string.isRequired,

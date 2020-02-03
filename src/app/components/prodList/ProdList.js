@@ -9,7 +9,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 // import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import StarIcon from "@material-ui/icons/Star";
+import Rating from "@material-ui/lab/Rating";
 
 import { useStyles } from "./styles";
 
@@ -45,12 +45,21 @@ const ProdList = ({ products }) => {
                                             className={classes.inline}
                                             color="textPrimary"
                                         >
-                                            <StarIcon
-                                                className={classes.star}
-                                            />{" "}
-                                            {prod.ratingAverage}
-                                            <br />
-                                            reviews:{prod.reviewsTotal}
+                                            <Rating
+                                                name="average-rating"
+                                                precision={0.5}
+                                                value={prod.ratingAverage}
+                                                size="small"
+                                                readOnly
+                                            />
+                                            <Typography
+                                                variant="subtitle1"
+                                                display="inline"
+                                                color="textSecondary"
+                                                className={classes.RatingText}
+                                            >
+                                                {prod.reviewsTotal} reviews
+                                            </Typography>
                                         </Typography>
                                     </>
                                 }
@@ -65,7 +74,18 @@ const ProdList = ({ products }) => {
 };
 
 ProdList.propTypes = {
-    products: PropTypes.array.isRequired
+    products: PropTypes.arrayOf(
+        PropTypes.shape({
+            business: PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired
+            }).isRequired,
+            lastReview: PropTypes.shape({}).isRequired,
+            name: PropTypes.string.isRequired,
+            ratingAverage: PropTypes.number.isRequired,
+            reviewsTotal: PropTypes.number.isRequired
+        })
+    ).isRequired
 };
 
 export default ProdList;

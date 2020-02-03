@@ -77,7 +77,7 @@ const MyApp = ({ Component, pageProps }) => {
     return (
         <>
             <Head>
-                <title>HEMA Gear reviews</title>
+                <title>My Sword: a HEMA gear review app</title>
             </Head>
             <ThemeProvider theme={theme}>
                 <CssBaseline />

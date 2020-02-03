@@ -91,7 +91,14 @@ const UserMenu = ({ userLogged }) => {
 };
 
 UserMenu.propTypes = {
-    userLogged: PropTypes.object.isRequired
+    userLogged: PropTypes.shape({
+        displayName: PropTypes.string,
+        email: PropTypes.string.isRequired,
+        emailVerified: PropTypes.bool.isRequired,
+        photoURL: PropTypes.string,
+        provider: PropTypes.string.isRequired,
+        uid: PropTypes.string.isRequired
+    }).isRequired
 };
 
 export default UserMenu;
