@@ -15,7 +15,8 @@ import DisplayContent from "./DisplayContent";
 // component
 const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
     const [isEditing, setIsEditing] = useState(false); // condition 1
-    const [ratingInput, setRatingInput] = useState("" + review.rating);
+    // const [ratingInput, setRatingInput] = useState("" + review.rating);
+    const [ratingInput, setRatingInput] = useState(review.rating);
     const [textInput, setTextInput] = useState(review.text);
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
@@ -61,12 +62,12 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
             .catch(err => {
                 actionCreators.apiCallError(apiDispatch);
                 toast.error("review update failed");
-                throw err;
+                console.log(err);
             });
     };
 
     // handlers
-    const handleRatingChange = e => setRatingInput(e.target.value);
+    const handleRatingChange = (e, newValue) => setRatingInput(newValue);
     const handleTextChange = e => setTextInput(e.target.value);
 
     const handleDelete = async e => {

@@ -7,7 +7,6 @@ import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
-import Rating from "@material-ui/lab/Rating";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
@@ -16,6 +15,7 @@ import * as apiUtils from "../../firebase/firebaseApiUtils";
 import { userContext } from "../../tools/reactContext";
 import SignIn from "../../components/header/SignIn";
 import { useStyles } from "../../styles/styles";
+import { RatingAndReviews } from "../../components/utilComponents";
 
 //
 // component
@@ -47,21 +47,10 @@ const Prod = ({ prod, reviewsReceived }) => {
             <Paper square>
                 <Box p={1} mb={1}>
                     <Typography variant="h4">{prod.name}</Typography>
-                    <Rating
-                        name="average-rating"
-                        precision={0.5}
-                        value={prod.ratingAverage}
-                        size="small"
-                        readOnly
+                    <RatingAndReviews
+                        ratingValue={prod.ratingAverage}
+                        reviewsValue={prod.reviewsTotal}
                     />
-                    <Typography
-                        variant="subtitle1"
-                        display="inline"
-                        color="textSecondary"
-                        className={classes.prodRatingText}
-                    >
-                        {prod.reviewsTotal} reviews
-                    </Typography>
                     <Typography variant="subtitle1">
                         from:{" "}
                         <Link

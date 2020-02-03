@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import StarIcon from "@material-ui/icons/Star";
+import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
+import Rating from "@material-ui/lab/Rating";
 
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as actionCreators from "../../tools/actionCreators";
@@ -16,6 +18,7 @@ import * as reducers from "../../tools/reducer";
 import { firebase } from "../../firebase/firebaseConfig";
 import * as dbFormat from "../../tools/dbFormat";
 import { userContext } from "../../tools/reactContext";
+import { ratingLabels } from "../../tools/commonVars";
 import { useStyles } from "./styles";
 
 //
@@ -23,6 +26,7 @@ import { useStyles } from "./styles";
 const ReviewInput = ({ productID, reviewsDispatch }) => {
     const [textInput, setTextInput] = useState("");
     const [ratingInput, setRatingInput] = useState(1);
+    const [hoverValue, setHoverValue] = useState(-1); // rating label value
 
     const [apiStatus, apiDispatch] = useReducer(reducers.apiStatusReducer, 0);
 
@@ -80,7 +84,7 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
 
     // handlers
     const handleTextChange = e => setTextInput(e.target.value);
-    const handleRatingChange = e => setRatingInput(e.target.value);
+    const handleRatingChange = (e, newValue) => setRatingInput(newValue);
     const handleSubmit = async e => {
         e.preventDefault();
         await create();
@@ -88,22 +92,26 @@ const ReviewInput = ({ productID, reviewsDispatch }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <Box pb={2}>
-                <StarIcon className={classes.star} />{" "}
-                <FormControl required>
-                    <Select
-                        native
-                        value={ratingInput}
-                        onChange={handleRatingChange}
-                    >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                        <option value={5}>5</option>
-                    </Select>
-                </FormControl>
-            </Box>
+            <Grid container justify="flex-end">
+                {ratingInput !== null && (
+                    <Box mr={2} component="span">
+                        {
+                            ratingLabels[
+                                hoverValue !== -1 ? hoverValue : ratingInput
+                            ]
+                        }
+                    </Box>
+                )}
+                <Rating
+                    name="edit-rating"
+                    size="small"
+                    value={ratingInput}
+                    onChange={handleRatingChange}
+                    onChangeActive={(event, newHover) => {
+                        setHoverValue(newHover);
+                    }}
+                />
+            </Grid>
             <Box pb={2}>
                 <TextField
                     multiline

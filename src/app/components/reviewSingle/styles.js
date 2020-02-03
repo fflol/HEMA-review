@@ -5,18 +5,6 @@ export const useStyles = makeStyles(theme => ({
         paddingLeft: 0,
         paddingRight: 0
     },
-    star: {
-        fontSize: "1rem",
-        position: "relative",
-        top: "2px",
-        color: theme.palette.star.default
-    },
-    starEditing: {
-        top: 5
-    },
-    rating: {
-        marginRight: 28
-    },
     primaryListItem: {
         marginBottom: theme.spacing(2)
     },

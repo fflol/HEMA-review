@@ -7,10 +7,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import { ConfirmDialog } from "../../components/utilComponents";
 import { useStyles } from "./styles";
 
+//
+// component
 const EditDropMenu = ({ handleEditOpen, handleDelete }) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const classes = useStyles();
 
     // vars
@@ -20,6 +24,8 @@ const EditDropMenu = ({ handleEditOpen, handleDelete }) => {
     // handlers
     const handleMenuOpen = e => setAnchorEl(e.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
+    const handleDialogOpen = () => setDialogOpen(true);
+    const handleDialogClose = () => setDialogOpen(false);
 
     return (
         <>
@@ -45,11 +51,17 @@ const EditDropMenu = ({ handleEditOpen, handleDelete }) => {
                     </Typography>
                 </MenuItem>
                 <MenuItem>
-                    <Typography onClick={handleDelete} variant="body2">
+                    <Typography onClick={handleDialogOpen} variant="body2">
                         Delete
                     </Typography>
                 </MenuItem>
             </Menu>
+            <ConfirmDialog
+                open={dialogOpen}
+                handleClose={handleDialogClose}
+                text="Content cannot be retrieved, confirm delete?"
+                action={handleDelete}
+            />
         </>
     );
 };

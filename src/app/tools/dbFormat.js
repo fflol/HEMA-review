@@ -2,7 +2,7 @@ import * as fb from "firebase/app";
 
 export const createReview = (ratingInput, textInput, userObj, userRef) => ({
     timeReviewed: fb.firestore.Timestamp.now(),
-    rating: parseInt(ratingInput),
+    rating: ratingInput,
     text: textInput,
     user: userObj,
     ...(userRef && { userRef })
@@ -10,7 +10,7 @@ export const createReview = (ratingInput, textInput, userObj, userRef) => ({
 
 export const updateReview = (ratingInput, textInput) => ({
     timeReviewed: fb.firestore.Timestamp.now(),
-    rating: parseInt(ratingInput),
+    rating: ratingInput,
     text: textInput
 });
 

@@ -17,15 +17,9 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ClearIcon from "@material-ui/icons/Clear";
 import Rating from "@material-ui/lab/Rating";
 
+import { ratingLabels } from "../../tools/commonVars";
+import { ConfirmDialog } from "../../components/utilComponents";
 import { useStyles } from "./styles";
-
-const labels = {
-    1: "Useless",
-    2: "Poor",
-    3: "Ok",
-    4: "Good",
-    5: "Excellent"
-};
 
 //
 // component
@@ -40,117 +34,137 @@ const EditContent = ({
     handleSubmitEdit,
     handleCancel
 }) => {
-    const [hoverValue, setHoverValue] = useState(-1);
+    const [hoverValue, setHoverValue] = useState(-1); // rating label value
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const classes = useStyles();
 
+    //handlers
+    const handleDialogOpen = e => {
+        e.preventDefault();
+        setDialogOpen(true);
+    };
+    const handleDialogClose = () => setDialogOpen(false);
+
     return (
-        <ListItem alignItems="flex-start" divider className={classes.listItem}>
-            <ListItemAvatar>
-                {author.photoURL ? (
-                    <AccountCircleIcon />
-                ) : (
-                    <Avatar alt="author photo" src={author.photoURL} />
-                )}
-            </ListItemAvatar>
-            <ListItemText
-                disableTypography
-                primary={
-                    <Card elevation={0} square>
-                        <CardHeader
-                            action={
-                                <IconButton
-                                    onClick={handleCancel}
-                                    size="small"
-                                    aria-label="settings"
-                                    className={classes.cardHeaderButton}
-                                >
-                                    <ClearIcon />
-                                </IconButton>
-                            }
-                            title={
-                                <Typography variant="button">
-                                    Edit review
-                                </Typography>
-                            }
-                            className={classes.cardHeader}
-                        />
-                        <Grid
-                            container
-                            justify="space-between"
-                            className={classes.primaryListItem}
-                        >
-                            <Grid item>
-                                <Typography
-                                    component="h5"
-                                    variant="subtitle2"
-                                    color="textPrimary"
-                                >
-                                    {author.displayName
-                                        ? author.displayName
-                                        : author.email}
-                                </Typography>
-                                <Typography
-                                    component="h6"
-                                    variant="caption"
-                                    color="textPrimary"
-                                >
-                                    {timeReviewed}
-                                </Typography>
+        <>
+            <ListItem
+                alignItems="flex-start"
+                divider
+                className={classes.listItem}
+            >
+                <ListItemAvatar>
+                    {author.photoURL ? (
+                        <AccountCircleIcon />
+                    ) : (
+                        <Avatar alt="author photo" src={author.photoURL} />
+                    )}
+                </ListItemAvatar>
+                <ListItemText
+                    disableTypography
+                    primary={
+                        <Card elevation={0} square>
+                            <CardHeader
+                                action={
+                                    <IconButton
+                                        onClick={handleCancel}
+                                        size="small"
+                                        aria-label="settings"
+                                        className={classes.cardHeaderButton}
+                                    >
+                                        <ClearIcon />
+                                    </IconButton>
+                                }
+                                title={
+                                    <Typography variant="button">
+                                        Edit review
+                                    </Typography>
+                                }
+                                className={classes.cardHeader}
+                            />
+                            <Grid
+                                container
+                                justify="space-between"
+                                className={classes.primaryListItem}
+                            >
+                                <Grid item>
+                                    <Typography
+                                        component="h5"
+                                        variant="subtitle2"
+                                        color="textPrimary"
+                                    >
+                                        {author.displayName
+                                            ? author.displayName
+                                            : author.email}
+                                    </Typography>
+                                    <Typography
+                                        component="h6"
+                                        variant="caption"
+                                        color="textPrimary"
+                                    >
+                                        {timeReviewed}
+                                    </Typography>
+                                </Grid>
+                                <Grid container justify="flex-end">
+                                    {ratingInput !== null && (
+                                        <Box mr={2}>
+                                            {
+                                                ratingLabels[
+                                                    hoverValue !== -1
+                                                        ? hoverValue
+                                                        : ratingInput
+                                                ]
+                                            }
+                                        </Box>
+                                    )}
+                                    <Rating
+                                        name="edit-rating"
+                                        size="small"
+                                        value={ratingInput}
+                                        onChange={handleRatingChange}
+                                        onChangeActive={(event, newHover) => {
+                                            setHoverValue(newHover);
+                                        }}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Rating
-                                    name="edit-rating"
-                                    size="small"
-                                    value={ratingInput}
-                                    onChange={handleRatingChange}
-                                    onChangeActive={(event, newHover) => {
-                                        setHoverValue(newHover);
-                                    }}
-                                />
-                                {ratingInput !== null && (
-                                    <Box ml={2}>
-                                        {
-                                            labels[
-                                                hoverValue !== -1
-                                                    ? hoverValue
-                                                    : ratingInput
-                                            ]
-                                        }
-                                    </Box>
-                                )}
-                            </Grid>
-                        </Grid>
-                    </Card>
-                }
-                secondary={
-                    <form onSubmit={handleSubmitEdit}>
-                        <TextField
-                            required
-                            multiline
-                            fullWidth
-                            rows="4"
-                            rowsMax="8"
-                            value={textInput}
-                            onChange={handleTextChange}
-                            variant="filled"
-                            className={classes.textField}
-                        />
-                        <Button
-                            type="submit"
-                            size="small"
-                            variant="contained"
-                            color="primary"
-                            disabled={apiStatus ? true : false}
-                            disableElevation
-                            fullWidth
-                        >
-                            {apiStatus ? "submiting" : "submit"}
-                        </Button>
-                    </form>
-                }
+                        </Card>
+                    }
+                    secondary={
+                        <form onSubmit={handleDialogOpen}>
+                            <TextField
+                                required
+                                multiline
+                                fullWidth
+                                rows="4"
+                                rowsMax="8"
+                                value={textInput}
+                                onChange={handleTextChange}
+                                variant="filled"
+                                className={classes.textField}
+                            />
+                            <Button
+                                type="submit"
+                                size="small"
+                                variant="contained"
+                                color="primary"
+                                disabled={apiStatus ? true : false}
+                                disableElevation
+                                fullWidth
+                            >
+                                {apiStatus ? "submiting" : "submit"}
+                            </Button>
+                        </form>
+                    }
+                />
+            </ListItem>
+            <ConfirmDialog
+                open={dialogOpen}
+                handleClose={handleDialogClose}
+                text="Previous content will be overwritten, confirm edit?"
+                action={handleSubmitEdit}
             />
-        </ListItem>
+        </>
     );
 };
 
@@ -163,7 +177,7 @@ EditContent.propTypes = {
     }).isRequired,
     timeReviewed: PropTypes.string.isRequired,
     apiStatus: PropTypes.number.isRequired,
-    ratingInput: PropTypes.string.isRequired,
+    ratingInput: PropTypes.number.isRequired,
     handleRatingChange: PropTypes.func.isRequired,
     textInput: PropTypes.string.isRequired,
     handleTextChange: PropTypes.func.isRequired,

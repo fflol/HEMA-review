@@ -9,8 +9,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 // import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating";
 
+import { RatingAndReviews } from "../../components/utilComponents";
 import { useStyles } from "./styles";
 
 //
@@ -27,6 +27,7 @@ const ProdList = ({ products }) => {
                                 <></>
                             </ListItemAvatar>
                             <ListItemText
+                                //disableTypography
                                 primary={
                                     <>
                                         <Link
@@ -38,30 +39,10 @@ const ProdList = ({ products }) => {
                                     </>
                                 }
                                 secondary={
-                                    <>
-                                        <Typography
-                                            component="span"
-                                            variant="body2"
-                                            className={classes.inline}
-                                            color="textPrimary"
-                                        >
-                                            <Rating
-                                                name="average-rating"
-                                                precision={0.5}
-                                                value={prod.ratingAverage}
-                                                size="small"
-                                                readOnly
-                                            />
-                                            <Typography
-                                                variant="subtitle1"
-                                                display="inline"
-                                                color="textSecondary"
-                                                className={classes.RatingText}
-                                            >
-                                                {prod.reviewsTotal} reviews
-                                            </Typography>
-                                        </Typography>
-                                    </>
+                                    <RatingAndReviews
+                                        ratingValue={prod.ratingAverage}
+                                        reviewsValue={prod.reviewsTotal}
+                                    />
                                 }
                             />
                         </ListItem>
