@@ -3,11 +3,8 @@ import PropTypes from "prop-types";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { useStyles } from "./styles";
-
 const ImgLoading = ({ component: Component, ...rest }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const classes = useStyles();
 
     return (
         <>
