@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
 import * as apiUtils from "../../firebase/firebaseApiUtils";
-import * as actionCreators from "../../tools/useReducHelpers/actionCreators";
+import * as actionCreators from "../../tools/useReduceHelpers/actionCreators";
 import * as reducers from "../../tools/useReduceHelpers/reducer";
 
 const UserPassword = ({ setIsEditingPassword }) => {
