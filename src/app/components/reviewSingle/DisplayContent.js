@@ -12,6 +12,7 @@ import Rating from "@material-ui/lab/Rating";
 
 import { useStyles } from "./styles";
 import EditDropMenu from "./EditDropMenu";
+import * as propTypeFormat from "../../tools/formats/propTypeFormat";
 
 //
 // component
@@ -93,18 +94,7 @@ const DisplayContent = ({
 };
 
 DisplayContent.propTypes = {
-    review: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        rating: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
-        timeReviewed: PropTypes.shape({}).isRequired,
-        user: PropTypes.shape({
-            displayName: PropTypes.string,
-            email: PropTypes.string.isRequired,
-            photoURL: PropTypes.string,
-            uid: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
+    review: propTypeFormat.reviewType,
     timeReviewed: PropTypes.string.isRequired,
     isOwnReview: PropTypes.bool,
     handleEditOpen: PropTypes.func.isRequired,

@@ -1,11 +1,13 @@
 import * as fb from "firebase/app";
 
+//
+// --- reviews ---
 export const createReview = (ratingInput, textInput, userObj, userRef) => ({
     timeReviewed: fb.firestore.Timestamp.now(),
     rating: ratingInput,
     text: textInput,
     user: userObj,
-    ...(userRef && { userRef })
+    ...(userRef && { userRef }) // local data doesnt need ref
 });
 
 export const updateReview = (ratingInput, textInput) => ({
@@ -14,6 +16,8 @@ export const updateReview = (ratingInput, textInput) => ({
     text: textInput
 });
 
+//
+// --- users ---
 export const createUser = (
     displayName,
     email,
@@ -28,6 +32,26 @@ export const createUser = (
     photoURL,
     emailVerified,
     provider,
-    ...(timeRegistered && { timeRegistered }),
+    ...(timeRegistered && { timeRegistered }), // local context data dont need these
     ...(reviews || (reviews === 0 && { reviews }))
+});
+
+//
+// --- products ---
+export const createProd = (business, description, name, currency, price) => ({
+    business,
+    businessRef: fb
+        .firestore()
+        .collection("businesses")
+        .doc(business.id),
+    description,
+    lastReview: null,
+    name,
+    price: { [currency]: price },
+    ratingAverage: null,
+    reviewsTotal: null
+});
+
+export const updateProd = description => ({
+    description
 });

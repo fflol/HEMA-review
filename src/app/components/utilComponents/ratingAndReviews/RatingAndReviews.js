@@ -10,7 +10,7 @@ const RatingAndReviews = ({ ratingValue, reviewsValue }) => {
     const classes = useStyles();
 
     return (
-        <>
+        <div>
             <Rating
                 name="average-rating"
                 precision={0.5}
@@ -26,7 +26,7 @@ const RatingAndReviews = ({ ratingValue, reviewsValue }) => {
             >
                 {reviewsValue} reviews
             </Typography>
-        </>
+        </div>
     );
 };
 

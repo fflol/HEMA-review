@@ -1,18 +1,17 @@
 import React from "react";
 import Link from "next/link";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-// import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 
 import { RatingAndReviews } from "../../components/utilComponents";
+import * as propTypeFormat from "../../tools/formats/propTypeFormat";
 import { useStyles } from "./styles";
-
 //
 // component
 const ProdList = ({ products }) => {
@@ -24,10 +23,13 @@ const ProdList = ({ products }) => {
                     <div key={prod.id}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <></>
+                                <img
+                                    src={prod.photoUrl && prod.photoUrl[0]}
+                                    alt="product-img"
+                                    className={classes.img}
+                                />
                             </ListItemAvatar>
                             <ListItemText
-                                //disableTypography
                                 primary={
                                     <>
                                         <Link
@@ -36,17 +38,33 @@ const ProdList = ({ products }) => {
                                         >
                                             <a>{prod.name}</a>
                                         </Link>
+                                        <RatingAndReviews
+                                            ratingValue={prod.ratingAverage}
+                                            reviewsValue={prod.reviewsTotal}
+                                        />
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="textSecondary"
+                                            className={classes.price}
+                                        >
+                                            $
+                                            {` ${prod.price &&
+                                                prod.price.usDollar}`}
+                                        </Typography>
                                     </>
                                 }
                                 secondary={
-                                    <RatingAndReviews
-                                        ratingValue={prod.ratingAverage}
-                                        reviewsValue={prod.reviewsTotal}
-                                    />
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        className={classes.description}
+                                    >
+                                        {prod.description}
+                                    </Typography>
                                 }
                             />
                         </ListItem>
-                        <Divider variant="inset" component="li" />
+                        <Divider component="li" />
                     </div>
                 ))}
             </List>
@@ -55,18 +73,7 @@ const ProdList = ({ products }) => {
 };
 
 ProdList.propTypes = {
-    products: PropTypes.arrayOf(
-        PropTypes.shape({
-            business: PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                name: PropTypes.string.isRequired
-            }).isRequired,
-            lastReview: PropTypes.shape({}).isRequired,
-            name: PropTypes.string.isRequired,
-            ratingAverage: PropTypes.number.isRequired,
-            reviewsTotal: PropTypes.number.isRequired
-        })
-    ).isRequired
+    products: propTypeFormat.productsWithPhotoType
 };
 
 export default ProdList;

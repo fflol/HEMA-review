@@ -10,7 +10,10 @@ import { useStyles } from "./styles";
 import Search from "../search/Search";
 import UserMenu from "./UserMenu";
 import SignIn from "./SignIn";
+import * as propTypesFormat from "../../tools/formats/propTypeFormat";
 
+//
+// components
 const Header = ({ products }) => {
     const userLogged = useContext(userContext);
 
@@ -47,18 +50,7 @@ const Header = ({ products }) => {
 };
 
 Header.propTypes = {
-    products: PropTypes.arrayOf(
-        PropTypes.shape({
-            business: PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                name: PropTypes.string.isRequired
-            }).isRequired,
-            lastReview: PropTypes.shape({}).isRequired,
-            name: PropTypes.string.isRequired,
-            ratingAverage: PropTypes.number.isRequired,
-            reviewsTotal: PropTypes.number.isRequired
-        })
-    ).isRequired
+    products: propTypesFormat.productsRecivedType
 };
 
 export default Header;

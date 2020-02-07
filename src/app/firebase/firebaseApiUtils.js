@@ -1,11 +1,13 @@
 import * as fb from "firebase/app";
-import { firebase } from "./firebaseConfig";
+import { firebase } from "./firebaseConfig"; // initialized instance
 import "firebase/firestore";
 import "firebase/auth";
+// import * as storageApis from "./firebaseStorageApis";
 
 const db = firebase.firestore();
 
 //
+//   ---------- firestore ----------
 //review CRUD -- C UD
 export const addReview = async (productID, newReview) =>
     await db
@@ -31,11 +33,45 @@ export const setReview = async (productID, reviewID, updatedReview) =>
         .doc(productID)
         .collection("reviews")
         .doc(reviewID) //need this id to update
-        .set(updatedReview, { merge: true }) // merge instead of overwrite
+        .set(updatedReview, { merge: true }) // merge instead of overwrite the whole doc
         .catch(err => console.log(err));
 
 //
 // review CRUD -- Read
+export const getReviews = async productID => {
+    let reviews = [];
+    await db
+        .collection("products")
+        .doc(productID)
+        .collection("reviews")
+        .orderBy("timeReviewed", "desc")
+        .get()
+        .then(Snapshot => {
+            Snapshot.forEach(doc => {
+                const objWithID = { id: doc.id, ...doc.data() };
+                const { userRef, ...rest } = objWithID;
+                reviews.push(rest);
+            });
+        })
+        .catch(error => {
+            console.log("Error getting reviews: ", error);
+        });
+
+    return reviews;
+};
+
+//
+//products CRUD -- C UD -- admin only
+
+export const setProd = async (productID, updatedProd) =>
+    await db
+        .collection("products")
+        .doc(productID) //need this id to update
+        .set(updatedProd, { merge: true }) // merge instead of overwrite the whole doc
+        .catch(err => console.log(err));
+
+//
+//products CRUD -- read
 export const getProducts = async () => {
     let products = [];
     await db
@@ -43,6 +79,7 @@ export const getProducts = async () => {
         .get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
+                // const imgUrls = storageApis.getStorageUrlsForProducts(doc.id);
                 const prod = { id: doc.id, ...doc.data() };
                 const { businessRef, ...rest } = prod;
                 products.push(rest);
@@ -75,28 +112,6 @@ export const getProd = async productID => {
         });
 
     return prod;
-};
-
-export const getReviews = async productID => {
-    let reviews = [];
-    await db
-        .collection("products")
-        .doc(productID)
-        .collection("reviews")
-        .orderBy("timeReviewed", "desc")
-        .get()
-        .then(Snapshot => {
-            Snapshot.forEach(doc => {
-                const objWithID = { id: doc.id, ...doc.data() };
-                const { userRef, ...rest } = objWithID;
-                reviews.push(rest);
-            });
-        })
-        .catch(error => {
-            console.log("Error getting reviews: ", error);
-        });
-
-    return reviews;
 };
 
 //

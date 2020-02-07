@@ -18,7 +18,7 @@ import Footer from "../components/footer/Footer";
 
 import { userContext } from "../tools/reactContext";
 import { firebase } from "../firebase/firebaseConfig";
-import * as dbFormat from "../tools/dbFormat";
+import * as dbFormat from "../tools/formats/dbFormat";
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../styles/theme";

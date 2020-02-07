@@ -8,7 +8,7 @@ import UserEmail from "../../components/userEmail/UserEmail";
 import UserPassword from "../../components/userPassword/UserPassword";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import { userContext } from "../../tools/reactContext";
-import { FbTimestampToReadable } from "../../tools/timeFormat";
+import { FbTimestampToReadable } from "../../tools/formats/timeFormat";
 
 //
 // component

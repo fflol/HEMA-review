@@ -9,13 +9,22 @@ import Tab from "@material-ui/core/Tab";
 import ProdList from "../components/prodList/ProdList";
 import * as helpers from "../tools/helpers";
 import * as apiUtils from "../firebase/firebaseApiUtils";
+import * as storageApis from "../firebase/firebaseStorageApis";
+import * as propTypeFormats from "../tools/formats/propTypeFormat";
 
 //
 // component
-const Index = ({ products, setAppProducts }) => {
+const Index = ({ productsReceived, setAppProducts }) => {
     const [tabValue, setTabValue] = useState(0);
+    const [products, setProducts] = useState(productsReceived);
 
-    useEffect(() => setAppProducts(products), []);
+    useEffect(() => {
+        (async () =>
+            setProducts(
+                await storageApis.addPhotoUrlToProducts(productsReceived)
+            ))(); // on mount, add photoUrl in products
+        setAppProducts(products);
+    }, []);
 
     // vars
     const highestRatedProducts = helpers.findHighRated(products);
@@ -28,6 +37,7 @@ const Index = ({ products, setAppProducts }) => {
         <>
             <Tabs
                 value={tabValue}
+                indicatorColor="primary"
                 onChange={handleTabChange}
                 aria-label="product view tab"
             >
@@ -51,22 +61,11 @@ const Index = ({ products, setAppProducts }) => {
 
 //
 Index.getInitialProps = async () => {
-    return { products: await apiUtils.getProducts() };
+    return { productsReceived: await apiUtils.getProducts() };
 };
 
 Index.propTypes = {
-    products: PropTypes.arrayOf(
-        PropTypes.shape({
-            business: PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                name: PropTypes.string.isRequired
-            }).isRequired,
-            lastReview: PropTypes.shape({}).isRequired,
-            name: PropTypes.string.isRequired,
-            ratingAverage: PropTypes.number.isRequired,
-            reviewsTotal: PropTypes.number.isRequired
-        })
-    ).isRequired,
+    productsReceived: propTypeFormats.productsRecivedType,
     setAppProducts: PropTypes.func.isRequired
 };
 

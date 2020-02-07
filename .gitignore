@@ -55,8 +55,15 @@ sketch
 
 .next
 
+### env ###
 .env
 
+### next deploy dist folder ###
 dist/
 
+### img resources ###
+imgResource/
+
+### google cloud account key ###
+hema-gear-review-bf0bd3697fbb.json
 # End of https://www.gitignore.io/api/git,react,firebase,visualstudiocode

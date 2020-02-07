@@ -22,5 +22,13 @@ export const useStyles = makeStyles(theme => ({
         position: "relative",
         left: theme.spacing(1),
         top: -3
+    },
+    prodPrice: {
+        position: "relative",
+        top: -12,
+        left: 4
+    },
+    prodDescription: {
+        whiteSpace: "pre-wrap"
     }
 }));

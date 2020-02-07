@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
 import * as apiUtils from "../../firebase/firebaseApiUtils";
-import * as actionCreators from "../../tools/actionCreators";
-import * as reducers from "../../tools/reducer";
-import * as dbFormat from "../../tools/dbFormat";
+import * as actionCreators from "../../tools/useReduceHelpers/actionCreators";
+import * as reducers from "../../tools/useReduceHelpers/reducer";
+import * as dbFormat from "../../tools/formats/dbFormat";
+import * as propTypeFormat from "../../tools/formats/propTypeFormat";
 import { userContext } from "../../tools/reactContext";
-import { FbTimestampToReadable } from "../../tools/timeFormat";
+import { FbTimestampToReadable } from "../../tools/formats/timeFormat";
 import EditContent from "./EditContent";
 import DisplayContent from "./DisplayContent";
 
@@ -108,18 +109,7 @@ const ReviewSingle = ({ productID, review, reviewsDispatch }) => {
 
 ReviewSingle.propTypes = {
     productID: PropTypes.string.isRequired,
-    review: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        rating: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
-        timeReviewed: PropTypes.shape({}).isRequired,
-        user: PropTypes.shape({
-            displayName: PropTypes.string,
-            email: PropTypes.string.isRequired,
-            photoURL: PropTypes.string,
-            uid: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
+    review: propTypeFormat.reviewType,
     reviewsDispatch: PropTypes.func.isRequired
 };
 

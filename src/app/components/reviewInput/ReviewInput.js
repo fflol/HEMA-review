@@ -2,9 +2,6 @@ import React, { useState, useReducer, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import StarIcon from "@material-ui/icons/Star";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -13,10 +10,10 @@ import Box from "@material-ui/core/Box";
 import Rating from "@material-ui/lab/Rating";
 
 import * as apiUtils from "../../firebase/firebaseApiUtils";
-import * as actionCreators from "../../tools/actionCreators";
-import * as reducers from "../../tools/reducer";
+import * as actionCreators from "../../tools/useReduceHelpers/actionCreators";
+import * as reducers from "../../tools/useReduceHelpers/reducer";
+import * as dbFormat from "../../tools/formats/dbFormat";
 import { firebase } from "../../firebase/firebaseConfig";
-import * as dbFormat from "../../tools/dbFormat";
 import { userContext } from "../../tools/reactContext";
 import { ratingLabels } from "../../tools/commonVars";
 import { useStyles } from "./styles";

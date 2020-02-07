@@ -2,8 +2,8 @@ import React, { useReducer } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
-import * as actionCreators from "../../tools/actionCreators";
-import * as reducers from "../../tools/reducer";
+import * as actionCreators from "../../tools/useReducHelpers/actionCreators";
+import * as reducers from "../../tools/useReduceHelpers/reducer";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 
 const UserProfile = ({

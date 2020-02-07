@@ -16,9 +16,9 @@ import Divider from "@material-ui/core/Divider";
 
 import { useStyles } from "./styles";
 import { firebase } from "../../firebase/firebaseConfig";
-import * as actionCreators from "../../tools/actionCreators";
-import * as reducers from "../../tools/reducer";
-import * as dbFormat from "../../tools/dbFormat";
+import * as actionCreators from "../../tools/useReduceHelpers/actionCreators";
+import * as reducers from "../../tools/useReduceHelpers/reducer";
+import * as dbFormat from "../../tools/formats/dbFormat";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 
 //
@@ -74,7 +74,6 @@ const SignIn = () => {
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then(res => {
-                console.log(res);
                 actionCreators.apiCallSuccess(apiDispatch);
                 const timeRegistered = fb.firestore.Timestamp.now();
                 const provider = res.user.providerData[0].providerId;

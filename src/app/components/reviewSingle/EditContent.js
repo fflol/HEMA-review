@@ -20,6 +20,7 @@ import Rating from "@material-ui/lab/Rating";
 import { ratingLabels } from "../../tools/commonVars";
 import { ConfirmDialog } from "../../components/utilComponents";
 import { useStyles } from "./styles";
+import * as propTypeFormat from "../../tools/formats/propTypeFormat";
 
 //
 // component
@@ -169,12 +170,7 @@ const EditContent = ({
 };
 
 EditContent.propTypes = {
-    author: PropTypes.shape({
-        displayName: PropTypes.string,
-        email: PropTypes.string.isRequired,
-        photoURL: PropTypes.string,
-        uid: PropTypes.string.isRequired
-    }).isRequired,
+    author: propTypeFormat.authorType,
     timeReviewed: PropTypes.string.isRequired,
     apiStatus: PropTypes.number.isRequired,
     ratingInput: PropTypes.number.isRequired,

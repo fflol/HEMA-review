@@ -1,17 +1,20 @@
 import { useReducer, useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import Link from "next/link";
 
-// import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
-import * as reducers from "../../tools/reducer";
+import * as reducers from "../../tools/useReduceHelpers/reducer";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
+import * as propTypesFormat from "../../tools/formats/propTypeFormat";
+import * as storageApis from "../../firebase/firebaseStorageApis";
 import { userContext } from "../../tools/reactContext";
 import SignIn from "../../components/header/SignIn";
 import { useStyles } from "../../styles/styles";
@@ -19,7 +22,8 @@ import { RatingAndReviews } from "../../components/utilComponents";
 
 //
 // component
-const Prod = ({ prod, reviewsReceived }) => {
+const Prod = ({ prodReceived, reviewsReceived }) => {
+    const [prod, setProd] = useState(prodReceived); // to add photoUrl later
     const [reviews, reviewsDispatch] = useReducer(
         reducers.reviewsReducer,
         reviewsReceived
@@ -34,23 +38,36 @@ const Prod = ({ prod, reviewsReceived }) => {
     );
 
     useEffect(() => {
+        // on mount, add photoUrl in prod
+        (async () =>
+            setProd(await storageApis.addPhotoUrlToProd(prodReceived)))();
+    }, []);
+
+    useEffect(() => {
         setHasUserReviewed(
             reviews.filter(review => review.user.email === userLogged.email)
                 .length > 0
         );
-    }, [reviews]); // re-checks every time when reviews updates
-
-    //var
+    }, [reviews, userLogged.email]); // re-checks every time when reviews updates
 
     return (
         <>
             <Paper square>
                 <Box p={1} mb={1}>
+                    {prod.photoUrl && (
+                        <GridList cols={2.5} cellHeight={320}>
+                            {prod.photoUrl.map(url => (
+                                <GridListTile key={url}>
+                                    <img src={url} alt={`${prod.name} photo`} />
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    )}
+                </Box>
+            </Paper>
+            <Paper square>
+                <Box p={1} mb={1}>
                     <Typography variant="h4">{prod.name}</Typography>
-                    <RatingAndReviews
-                        ratingValue={prod.ratingAverage}
-                        reviewsValue={prod.reviewsTotal}
-                    />
                     <Typography variant="subtitle1">
                         from:{" "}
                         <Link
@@ -59,6 +76,24 @@ const Prod = ({ prod, reviewsReceived }) => {
                         >
                             <a>{prod.business.name}</a>
                         </Link>
+                    </Typography>
+                    <RatingAndReviews
+                        ratingValue={prod.ratingAverage}
+                        reviewsValue={prod.reviewsTotal}
+                    />
+                    <Typography
+                        variant="subtitle1"
+                        color="textSecondary"
+                        className={classes.prodPrice}
+                    >
+                        ${` ${prod.price && prod.price.usDollar}`}
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        className={classes.prodDescription}
+                    >
+                        {prod.description}
                     </Typography>
                 </Box>
             </Paper>
@@ -100,36 +135,14 @@ const Prod = ({ prod, reviewsReceived }) => {
 //
 Prod.getInitialProps = async ({ query }) => {
     return {
-        prod: await apiUtils.getProd(query.id),
+        prodReceived: await apiUtils.getProd(query.id),
         reviewsReceived: await apiUtils.getReviews(query.id)
     };
 };
 
 Prod.propTypes = {
-    prod: PropTypes.shape({
-        business: PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired
-        }).isRequired,
-        lastReview: PropTypes.shape({}).isRequired,
-        name: PropTypes.string.isRequired,
-        ratingAverage: PropTypes.number.isRequired,
-        reviewsTotal: PropTypes.number.isRequired
-    }).isRequired,
-    reviewsReceived: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            rating: PropTypes.number.isRequired,
-            text: PropTypes.string.isRequired,
-            timeReviewed: PropTypes.shape({}).isRequired,
-            user: PropTypes.shape({
-                displayName: PropTypes.string,
-                email: PropTypes.string.isRequired,
-                photoURL: PropTypes.string,
-                uid: PropTypes.string.isRequired
-            }).isRequired
-        })
-    ).isRequired
+    prodReceived: propTypesFormat.prodType,
+    reviewsReceived: propTypesFormat.reviewsReceivedType
 };
 
 export default Prod;
