@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import { RatingAndReviews } from "../../components/utilComponents";
 import * as propTypeFormat from "../../tools/formats/propTypeFormat";
 import { useStyles } from "./styles";
+import ImgLoading from "../imgLoading/ImgLoading";
 //
 // component
 const ProdList = ({ products }) => {
@@ -23,10 +24,11 @@ const ProdList = ({ products }) => {
                     <div key={prod.id}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <img
+                                <ImgLoading
                                     src={prod.photoUrl && prod.photoUrl[0]}
-                                    alt="product-img"
+                                    alt={`${prod.name} photo`}
                                     className={classes.img}
+                                    component="img"
                                 />
                             </ListItemAvatar>
                             <ListItemText

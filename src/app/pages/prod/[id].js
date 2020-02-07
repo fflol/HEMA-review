@@ -11,12 +11,13 @@ import GridListTile from "@material-ui/core/GridListTile";
 
 import ReviewInput from "../../components/reviewInput/ReviewInput";
 import ReviewSingle from "../../components/reviewSingle/ReviewSingle";
+import ImgLoading from "../../components/imgLoading/ImgLoading";
+import SignIn from "../../components/header/SignIn";
 import * as reducers from "../../tools/useReduceHelpers/reducer";
 import * as apiUtils from "../../firebase/firebaseApiUtils";
 import * as propTypesFormat from "../../tools/formats/propTypeFormat";
 import * as storageApis from "../../firebase/firebaseStorageApis";
 import { userContext } from "../../tools/reactContext";
-import SignIn from "../../components/header/SignIn";
 import { useStyles } from "../../styles/styles";
 import { RatingAndReviews } from "../../components/utilComponents";
 
@@ -55,10 +56,19 @@ const Prod = ({ prodReceived, reviewsReceived }) => {
             <Paper square>
                 <Box p={1} mb={1}>
                     {prod.photoUrl && (
-                        <GridList cols={2.5} cellHeight={320}>
+                        <GridList
+                            cols={2.5}
+                            cellHeight={320}
+                            className={classes.prodGridList}
+                        >
                             {prod.photoUrl.map(url => (
                                 <GridListTile key={url}>
-                                    <img src={url} alt={`${prod.name} photo`} />
+                                    <ImgLoading
+                                        src={url}
+                                        alt={`${prod.name} photo`}
+                                        className="MuiGridListTile-imgFullWidth"
+                                        component="img"
+                                    />
                                 </GridListTile>
                             ))}
                         </GridList>

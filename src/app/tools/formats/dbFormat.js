@@ -1,4 +1,5 @@
 import * as fb from "firebase/app";
+import * as formatOptions from "./dbformatOptions";
 
 //
 // --- reviews ---
@@ -38,20 +39,30 @@ export const createUser = (
 
 //
 // --- products ---
-export const createProd = (business, description, name, currency, price) => ({
-    business,
-    businessRef: fb
-        .firestore()
-        .collection("businesses")
-        .doc(business.id),
-    description,
-    lastReview: null,
-    name,
-    price: { [currency]: price },
-    ratingAverage: null,
-    reviewsTotal: null
-});
+export const createProd = (businessID, description, name, currency, price) => {
+    const business = formatOptions.businessesOptions.find(
+        business => business.id === businessID
+    );
 
-export const updateProd = description => ({
-    description
+    return {
+        business: {
+            id: businessID,
+            name: business.name
+        },
+        businessRef: fb
+            .firestore()
+            .collection("businesses")
+            .doc(businessID),
+        description,
+        lastReview: {},
+        name,
+        price: { [currency]: price },
+        ratingAverage: 0,
+        reviewsTotal: 0
+    };
+};
+
+export const updateProd = (description, currency, price) => ({
+    description,
+    price: { [currency]: price }
 });

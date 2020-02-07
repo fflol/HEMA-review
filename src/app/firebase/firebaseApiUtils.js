@@ -62,7 +62,15 @@ export const getReviews = async productID => {
 
 //
 //products CRUD -- C UD -- admin only
+// add new prod
+export const addProd = async newProd =>
+    await db
+        .collection("products")
+        .add(newProd) // generates new id
+        .then(res => res.id)
+        .catch(err => console.log(err));
 
+// update prod
 export const setProd = async (productID, updatedProd) =>
     await db
         .collection("products")
