@@ -1,3 +1,5 @@
+![1244 mounted knight, Siege of Jerusalem](https://qph.fs.quoracdn.net/main-qimg-b4fea864fefcde82a95af5c2be86fb05)
+
 # Mysword.me
 
 This is a Hema gear review app.
