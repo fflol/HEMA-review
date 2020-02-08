@@ -1,4 +1,4 @@
-# Reddit Clone
+# Mysword.me
 
 This is a Hema gear review app.
 
