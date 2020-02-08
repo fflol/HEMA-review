@@ -6,7 +6,7 @@ It's deployed [here](https://mysword.me/).
 
 ## What's HEMA?
 
-Historical European martial arts. Basically two nerds hacking each other with fake swords. Occasionally there will be group fights, shield wall and sneaky back-stabing etc...
+Historical European martial arts. Basically two nerds hacking each other with fake swords. Occasionally there will be group fights, shield wall and sneaky backstabbing etc...
 
 [Wikipedia HEMA page](https://en.wikipedia.org/wiki/Historical_European_martial_arts)
 
