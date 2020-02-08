@@ -5,6 +5,8 @@
 This is a Hema gear review app.
 
 It's deployed [here](https://mysword.me/).
+> Right now first page loading takes longer than it should be, but will be fixed soon :)
+
 
 ## What's HEMA?
 
