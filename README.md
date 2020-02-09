@@ -5,8 +5,6 @@
 This is a Hema gear review app.
 
 It's deployed [here](https://mysword.me/).
-> Right now first page loading takes longer than it should be, but will be fixed soon :)
-
 
 ## What's HEMA?
 
@@ -18,13 +16,27 @@ Historical European martial arts. Basically two nerds hacking each other with fa
 
 -   React
 
+> Because this is small and all by myself, I didn't use Redux. instead, **useContext**, **useState** and **useReduce** are utilized for state management.
+
+> Api calls are handled in three places:
+
+> -   Initial HTTP GET are performed on server side, within **getInitialProps** (Next.js method).
+> -   Client side initial api calls are performed in **useEffect**, as IIFEs (async functions).
+> -   Other CRUD methods are just async functions, invoked when needed.
+
 -   Next.js
+
+> Next.js is pretty awesome, it does server-side rendering, routing, compiling and a lot of other things for us.
+
+> Having said that, getting Next.js to work with Firebase is pretty **hacky**, because those backend logic also need to be deployed to Firebase. Eventually Zeit has an example of deploying the **next()** method as a cloud function and rewrites the Firebase hosting.
 
 -   Firebase family.
 
+> Firestore, cloud function, storage, hosting. Average rating, review numbers and other stuff are calculated with cloud functions dynamically.
+
 -   Material UI
 
-Making Next.js working with Firebase is pretty **hacky**. Probabaly will try other stacks next time.
+> Had to do some hacking to get Next.js working with it as well. But generally happy with it.
 
 ## Folder structure:
 
